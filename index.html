@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="sk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ivana Birošová — Hudba na mieru | Pesničky k výročiam, svadbám a ako dar</title>
+  <meta name="description" content="Ivana Birošová — skladateľka, textárka a tvorca hudobného obsahu. Pesničky na mieru k výročiam, svadbám a ako originálny dar pre blízkych." />
+  <meta name="theme-color" content="#2563eb" />
+  <style>
+    :root{
+      --accent:#2563eb; --text:#0f172a; --muted:#475569; --card:#ffffff; --border:#e5e7eb;
+      /* farby neónu */
+      --neon-1:#67e8f9;   /* aqua */
+      --neon-2:#c084fc;   /* fialová */
+      --neon-3:#fca5a5;   /* lososová */
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; padding:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--text); line-height:1.6; }
+
+    /* Jemne animované pastelové pozadie */
+    body{
+      background: linear-gradient(120deg,#f2f5f7 0%, #f0eefc 35%, #e8f7f0 70%, #fff0f3 100%);
+      background-size: 300% 300%;
+      animation: bgShift 18s ease-in-out infinite alternate;
+    }
+    @keyframes bgShift{ 0%{background-position:0% 50%} 50%{background-position:50% 50%} 100%{background-position:100% 50%} }
+    @media (prefers-reduced-motion: reduce){ body{ animation:none; } }
+
+    a{ color:inherit; }
+    .container{ max-width:1100px; margin:0 auto; padding:24px; }
+
+    /* Skip link */
+    .skip-link{ position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden; }
+    .skip-link:focus{ position:fixed; left:12px; top:12px; width:auto; height:auto; padding:10px 12px; background:#111827; color:#fff; z-index:100; border-radius:10px; }
+
+    /* Fixné hudobné pozadie (noty + osnova) */
+    #bg-music{ position:fixed; inset:0; width:100vw; height:100vh; z-index:0; pointer-events:none; }
+
+    /* Header */
+    header{ position:sticky; top:0; z-index:10; backdrop-filter:saturate(1.1) blur(6px); background:rgba(255,255,255,.55); border-bottom:1px solid var(--border); }
+    .nav{ display:flex; align-items:center; justify-content:space-between; gap:16px; }
+    .logo{ display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; }
+    .brand{ font-weight:800; letter-spacing:.2px; font-size:20px; }
+    .tagline{ font-size:14px; color:var(--muted); font-weight:500; }
+    nav a{ text-decoration:none; color:var(--muted); padding:8px 10px; border-radius:10px; font-weight:600; outline:none; }
+    nav a:hover, nav a:focus-visible{ color:var(--text); background:#eef2ff; }
+    .cta{ background:var(--accent); color:#fff !important; }
+    .cta:hover, .cta:focus-visible{ filter:brightness(.95); }
+
+    /* Obsah */
+    main{ position:relative; z-index:5; }
+    .hero{ display:grid; grid-template-columns: 1.1fr .9fr; gap:28px; align-items:center; padding:32px 0 10px; }
+    .hero h1{ font-size:clamp(28px, 5vw, 44px); margin:0 0 12px; line-height:1.15; }
+    .hero p{ color:var(--muted); margin:0 0 18px; }
+    .hero .actions{ display:flex; gap:12px; flex-wrap:wrap; }
+
+    /* Boxy */
+    .card, .hero-img, .service, .video-wrapper{
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,.35);
+      border-radius: 18px;
+      padding: 24px;
+      position: relative;
+      box-shadow: 0 8px 22px rgba(0,0,0,.06);
+    }
+    .hero-img{ padding:0; overflow:visible; }
+    .hero-img img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+    section{ padding:40px 0; }
+    h2{ font-size:clamp(22px, 3.2vw, 32px); margin:0 0 12px; }
+    .lead{ color:var(--muted); margin:0 0 20px; }
+    .grid-3{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+    .service{ padding:18px; }
+
+    /* Galéria */
+    .video-wrapper{ overflow: visible; }
+    .ratio{ position:relative; width:100%; padding-top:56.25%; }
+    .ratio iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+    .thumbs{ display:flex; gap:10px; margin-top:12px; overflow:auto; padding-bottom:2px; scroll-snap-type:x mandatory; }
+    .thumb{ flex:0 0 180px; border-radius:12px; overflow:hidden; border:2px solid transparent; cursor:pointer; background:#000; scroll-snap-align:start; outline:none; }
+    .thumb img{ display:block; width:100%; height:auto; }
+    .thumb.active{ border-color:var(--accent); }
+    .thumb .label{ padding:8px 10px; color:#fff; font-size:14px; background:rgba(0,0,0,.5); }
+
+    /* Formulár */
+    form{ display:grid; gap:12px; }
+    input, textarea, button{ font:inherit; }
+    input, textarea{ padding:12px 14px; border-radius:12px; border:1px solid #d1d5db; background:#fff; }
+    input:focus-visible, textarea:focus-visible{ outline:3px solid #bfdbfe; border-color:#93c5fd; }
+    textarea{ min-height:120px; resize:vertical; }
+    button{ padding:12px 16px; border-radius:12px; border:0; background:var(--accent); color:#fff; font-weight:700; cursor:pointer; }
+    button:hover, button:focus-visible{ filter:brightness(.95); }
+
+    footer{ padding:26px 0; color:#64748b; border-top:1px solid var(--border); }
+
+    /* MarSab floating badge + info okno */
+    .brand-badge{
+      position:fixed; bottom:14px; right:14px;
+      display:flex; align-items:center; gap:6px; padding:6px 10px;
+      background:#000; color:#fff; font-size:12px; font-weight:700;
+      border-radius:12px; text-decoration:none; z-index:50; outline:none;
+      box-shadow:0 0 10px rgba(0,0,0,.35);
+    }
+    .brand-badge img{ height:18px; width:auto; }
+    .brand-badge:hover, .brand-badge:focus-visible{ background:#000; }
+    @media (max-width:600px){
+      .brand-badge{ font-size:11px; padding:5px 8px; bottom:10px; right:10px; }
+      .brand-badge img{ height:16px; }
+    }
+
+    /* malé informačné okno */
+    .ms-info{
+      position:fixed; right:14px; bottom:54px; width:280px;
+      background:#0b0b0b; color:#e5e7eb; border:1px solid #2b2b2b;
+      border-radius:12px; padding:12px 12px 10px; z-index:60;
+      box-shadow:0 10px 28px rgba(0,0,0,.35);
+      transform: translateY(8px); opacity:0; pointer-events:none;
+      transition: opacity .18s ease, transform .18s ease;
+    }
+    .ms-info.show{ transform: translateY(0); opacity:1; pointer-events:auto; }
+    .ms-info h4{ margin:0 0 6px; font-size:14px; color:#fff; }
+    .ms-info p{ margin:0; font-size:12px; line-height:1.5; color:#cbd5e1; }
+    .ms-info .close{
+      position:absolute; top:6px; right:8px; background:transparent; border:0; color:#94a3b8;
+      font-size:18px; cursor:pointer; padding:2px; line-height:1;
+    }
+    .ms-info .close:hover, .ms-info .close:focus-visible{ color:#e2e8f0; }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Preskočiť na obsah</a>
+
+  <!-- FIXNÉ HUDOBNÉ POZADIE (SVG) -->
+  <svg id="bg-music" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <filter id="grain">
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch"/>
+        <feColorMatrix type="saturate" values="0"/>
+        <feComponentTransfer><feFuncA type="linear" slope="0.06"/></feComponentTransfer>
+      </filter>
+      <style>
+        .staff{stroke:#1f2937;stroke-width:2;fill:none;opacity:.18}
+        .note{fill:#111827;opacity:.24}
+        .clef{fill:#111827;opacity:.18;font-size:220px}
+      </style>
+    </defs>
+    <rect x="-5" y="-5" width="1210" height="810" fill="transparent" filter="url(#grain)"></rect>
+    <g transform="translate(0,140)">
+      <g>
+        <path class="staff" d="M-100,170 C150,150 320,190 520,170 C720,150 920,190 1220,170"></path>
+        <path class="staff" d="M-100,210 C150,190 320,230 520,210 C720,190 920,230 1220,210"></path>
+        <path class="staff" d="M-100,250 C150,230 320,270 520,250 C720,230 920,270 1220,250"></path>
+        <path class="staff" d="M-100,290 C150,270 320,310 520,290 C720,270 920,310 1220,290"></path>
+        <path class="staff" d="M-100,330 C150,310 320,350 520,330 C720,310 920,350 1220,330"></path>
+      </g>
+      <text class="clef" x="90" y="330">𝄞</text>
+      <g class="note">
+        <g transform="translate(430,140) rotate(-12)"><ellipse cx="0" cy="0" rx="12" ry="9"></ellipse><rect x="8" y="-40" width="3" height="42"></rect></g>
+        <g transform="translate(720,210) rotate(8)"><ellipse cx="0" cy="0" rx="12" ry="9"></ellipse><rect x="8" y="-40" width="3" height="42"></rect></g>
+        <g transform="translate(980,270) rotate(-18)"><ellipse cx="0" cy="0" rx="12" ry="9"></ellipse><rect x="8" y="-40" width="3" height="42"></rect></g>
+        <g transform="translate(260,250) rotate(14)">
+          <ellipse cx="0" cy="0" rx="11" ry="8"></ellipse><rect x="7" y="-38" width="3" height="40"></rect>
+          <ellipse cx="22" cy="-6" rx="11" ry="8"></ellipse><rect x="29" y="-44" width="3" height="46"></rect>
+          <path d="M10,-33 C20,-40 30,-40 32,-36" stroke="#111827" stroke-width="3" fill="none"></path>
+        </g>
+      </g>
+    </g>
+  </svg>
+
+  <!-- Header -->
+  <header>
+    <div class="container nav">
+      <div class="logo">
+        <span class="brand">Ivana Birošová</span>
+        <span class="tagline">skladateľka • textárka • tvorca hudobného obsahu</span>
+      </div>
+      <nav aria-label="Primárna navigácia">
+        <a href="#o-mne">O mne</a>
+        <a href="#sluzby">Služby</a>
+        <a href="#galeria">Galéria</a>
+        <a href="#kontakt" class="cta">Kontakt</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="container">
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-heading">
+      <div class="card neon">
+        <h1 id="hero-heading">Pesničky na mieru pre tvoje výročia, svadby a darčeky.</h1>
+        <p>Tvoj príbeh premením na text a melódiu — nahrávka so spevom (AI) alebo inštrumentálna verzia podľa želania.</p>
+        <div class="actions">
+          <a class="cta" href="#kontakt" style="text-decoration:none; padding:12px 16px; border-radius:12px;">Napísať správu</a>
+          <a href="#sluzby" style="text-decoration:none; padding:12px 16px; border:1px solid #d1d5db; border-radius:12px; color:var(--text);">Pozrieť služby</a>
+        </div>
+      </div>
+      <div class="hero-img neon">
+        <img src="img/birosova.png" alt="Ilustrácia Ivany Birošovej so skladateľským motívom" />
+      </div>
+    </section>
+
+    <!-- O mne -->
+    <section id="o-mne" aria-labelledby="o-mne-heading">
+      <h2 id="o-mne-heading">O mne</h2>
+      <p class="lead">Krátky príbeh, referencie, prístup k práci.</p>
+      <div class="card neon">
+        <p>Ivana Birošová sa narodila na východe Slovenska, v malebnej obci uprostred prírody. Už ako dieťa bola iná než jej rovesníci – dobrodružná, zvedavá a nebojácna. Táto povaha ju priviedla na mnohé cesty: od ozbrojených síl, cez hasičský zbor, až po podomový predaj. Nikdy ju nelákalo „konvenčné“ zamestnanie, vždy hľadala niečo viac.</p>
+        <p>Časom sa usadila a našla stabilitu – dnes pracuje ako finančný poradca v banke. No iskra dobrodružstva v nej zostala. A tak, keď ju nemôže prežívať naplno, aspoň o ňom píše a skladá. Nie len o svojom, ale najmä o vašom: o vašich snoch, plánoch, svadbách, želaniach či radostiach.</p>
+        <p>Pesničky, ktoré pre vás tvorí, sú vždy osobné. Príbeh je váš. Slová, ktoré ho rozprávajú, sú od nej. A hudba – aj keď vzniká pomocou AI – nesie jej vedenie, cit a smer. Ivana sa teší z každého darčeka, ktorý vďaka jej piesni vznikne, rovnako ako vy, keď ho budete odovzdávať.</p>
+      </div>
+    </section>
+
+    <!-- Služby -->
+    <section id="sluzby" aria-labelledby="sluzby-heading">
+      <h2 id="sluzby-heading">Služby</h2>
+      <p class="lead">Hudba na mieru – od nápadu po hotovú pesničku.</p>
+      <div class="grid-3">
+        <div class="service neon"><h3>Pesnička k výročiu</h3><p>Osobný text, melódia a nahrávka – presne pre vašu príležitosť.</p></div>
+        <div class="service neon"><h3>Svadobná pieseň</h3><p>Prvý tanec alebo dar – pripravíme nezabudnuteľný moment.</p></div>
+        <div class="service neon"><h3>Dar pre blízkeho</h3><p>Spomienky v piesni – originálny a emotívny dar.</p></div>
+      </div>
+    </section>
+
+    <!-- Galéria -->
+    <section id="galeria" aria-labelledby="galeria-heading">
+      <h2 id="galeria-heading">Galéria</h2>
+      <p class="lead">Ukážky piesní. Vyber video v podávači nižšie.</p>
+      <div class="video-wrapper neon">
+        <div class="ratio">
+          <iframe id="yt-player"
+            src="https://www.youtube.com/embed/VIDEO_ID_1?rel=0"
+            title="YouTube video player"
+            allowfullscreen
+            loading="lazy"
+            referrerpolicy="strict-origin-when-cross-origin"></iframe>
+        </div>
+      </div>
+      <div class="thumbs" id="yt-thumbs" aria-label="Podávač videí">
+        <button class="thumb active" data-id="VIDEO_ID_1" aria-pressed="true">
+          <img src="https://img.youtube.com/vi/VIDEO_ID_1/hqdefault.jpg" alt="Ukážka 1 — náhľad" loading="lazy">
+          <div class="label">Ukážka 1</div>
+        </button>
+        <button class="thumb" data-id="VIDEO_ID_2" aria-pressed="false">
+          <img src="https://img.youtube.com/vi/VIDEO_ID_2/hqdefault.jpg" alt="Ukážka 2 — náhľad" loading="lazy">
+          <div class="label">Ukážka 2</div>
+        </button>
+      </div>
+    </section>
+
+    <!-- Kontakt -->
+    <section id="kontakt" aria-labelledby="kontakt-heading">
+      <h2 id="kontakt-heading">Kontakt</h2>
+      <p class="lead">Napíš správu – príde na e-mail.</p>
+      <div class="card neon">
+        <form id="contact-form">
+          <input type="text" name="name" placeholder="Meno" required autocomplete="name" />
+          <input type="email" name="email" placeholder="E-mail" required autocomplete="email" inputmode="email" />
+          <textarea name="message" placeholder="Správa" required></textarea>
+          <button type="submit">Odoslať</button>
+          <p id="form-status" aria-live="polite" style="margin:8px 0 0; color:var(--muted);"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">© <span id="year"></span> Ivana Birošová — skladateľka, textárka a tvorca hudobného obsahu</div>
+  </footer>
+
+  <!-- MarSab floating badge -->
+  <a class="brand-badge" href="#" id="ms-badge" aria-controls="ms-info" aria-expanded="false" aria-label="MarSab®">
+    <img src="img/marsab_logo.png" alt="MarSab® logo">
+    <span>MarSab®</span>
+  </a>
+
+  <!-- malé info okno (skryté) -->
+  <div class="ms-info" id="ms-info" role="dialog" aria-modal="false" aria-labelledby="ms-info-title">
+    <button class="close" type="button" aria-label="Zavrieť" id="ms-close">×</button>
+    <h4 id="ms-info-title">Tvorca stránky</h4>
+    <p>
+      Mgr. Marcel Šabla — webdizajnér, tvorca stránky<br>
+      IČO: 53713745<br>
+      Vedený v registri Okresný úrad Senec<br>
+      Číslo živnostenského registra: 140-26419
+    </p>
+  </div>
+
+  <script>
+    // Rok vo footeri
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // YouTube podávač
+    const player = document.getElementById('yt-player');
+    const thumbs = document.getElementById('yt-thumbs');
+    thumbs.addEventListener('click', (e)=>{
+      const item = e.target.closest('.thumb'); if(!item) return;
+      const id = item.getAttribute('data-id'); if(!id) return;
+      player.src = `https://www.youtube.com/embed/${id}?rel=0`;
+      thumbs.querySelectorAll('.thumb').forEach(t=>{
+        t.classList.remove('active'); t.setAttribute('aria-pressed','false');
+      });
+      item.classList.add('active'); item.setAttribute('aria-pressed','true');
+    });
+
+    // Demo odosielanie formulára
+    const form = document.getElementById('contact-form');
+    const statusEl = document.getElementById('form-status');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      statusEl.textContent = 'Odosielam…';
+      setTimeout(() => { statusEl.textContent = 'Správa odoslaná (demo).'; form.reset(); }, 600);
+    });
+
+    // MarSab info okno (toggle)
+    const badge = document.getElementById('ms-badge');
+    const info  = document.getElementById('ms-info');
+    const closeBtn = document.getElementById('ms-close');
+
+    const toggleInfo = (show) => {
+      const willShow = (typeof show === 'boolean') ? show : !info.classList.contains('show');
+      info.classList.toggle('show', willShow);
+      badge.setAttribute('aria-expanded', String(willShow));
+    };
+
+    badge.addEventListener('click', (e)=>{ e.preventDefault(); toggleInfo(); });
+    closeBtn.addEventListener('click', ()=> toggleInfo(false));
+    document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') toggleInfo(false); });
+    document.addEventListener('click', (e)=>{
+      if(!info.classList.contains('show')) return;
+      if(!info.contains(e.target) && e.target !== badge && !badge.contains(e.target)){
+        toggleInfo(false);
+      }
+    });
+  </script>
+</body>
+</html>
