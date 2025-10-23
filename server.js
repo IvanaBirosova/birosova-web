@@ -1,5 +1,9 @@
 // server.js
-require("dotenv").config();
+// (1) Načítaj .env len mimo produkcie – na Renderi sa používa Env Vars
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
+
 const express = require("express");
 const cors = require("cors");
 const rateLimit = require("express-rate-limit");
@@ -8,9 +12,20 @@ const path = require("path");
 
 const app = express();
 
+// (2) DÔLEŽITÉ: Render beží za reverzným proxy → povol X-Forwarded-*
+//    Toto musí byť pred rate-limitom, inak dostaneš ERR_ERL_UNEXPECTED_X_FORWARDED_FOR
+app.set("trust proxy", 1);
+
 // ---- Parsovanie JSON + jednoduchý rate limit
 app.use(express.json({ limit: "200kb" }));
-app.use(rateLimit({ windowMs: 60 * 1000, max: 20 }));
+app.use(
+  rateLimit({
+    windowMs: 60 * 1000,
+    max: 20,
+    standardHeaders: true,
+    legacyHeaders: false,
+  })
+);
 
 // ---- CORS (vývoj: povolíme aj file:// a localhost)
 const allowed = (process.env.ALLOWED_ORIGINS || "")
@@ -91,5 +106,6 @@ app.post("/api/contact", async (req, res) => {
 // healthcheck
 app.get("/api/health", (_req, res) => res.json({ ok: true }));
 
+// (3) Port – nikdy nehardcodovať. Render nastaví PORT sám.
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Server beží na porte ${PORT}`));
