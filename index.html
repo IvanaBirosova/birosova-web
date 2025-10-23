@@ -9,20 +9,22 @@
   <style>
     :root{
       --accent:#2563eb; --text:#0f172a; --muted:#475569; --card:#ffffff; --border:#e5e7eb;
-      /* farby neónu */
+      /* paleta neónu */
       --neon-1:#67e8f9;   /* aqua */
-      --neon-2:#c084fc;   /* fialová */
-      --neon-3:#fca5a5;   /* lososová */
+      --neon-2:#60a5fa;   /* modrá */
+      --neon-3:#c084fc;   /* fialová */
+      --neon-4:#f472b6;   /* ružová */
+      --neon-5:#fca5a5;   /* lososová */
     }
 
     *{ box-sizing:border-box; }
     html,body{ margin:0; padding:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--text); line-height:1.6; }
 
-    /* Jemne animované pastelové pozadie */
+    /* jemne animované pastelové pozadie */
     body{
       background: linear-gradient(120deg,#f2f5f7 0%, #f0eefc 35%, #e8f7f0 70%, #fff0f3 100%);
       background-size: 300% 300%;
-      animation: bgShift 18s ease-in-out infinite alternate;
+      animation: bgShift 20s ease-in-out infinite alternate;
     }
     @keyframes bgShift{ 0%{background-position:0% 50%} 50%{background-position:50% 50%} 100%{background-position:100% 50%} }
     @media (prefers-reduced-motion: reduce){ body{ animation:none; } }
@@ -34,7 +36,7 @@
     .skip-link{ position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden; }
     .skip-link:focus{ position:fixed; left:12px; top:12px; width:auto; height:auto; padding:10px 12px; background:#111827; color:#fff; z-index:100; border-radius:10px; }
 
-    /* Fixné hudobné pozadie (noty + osnova) */
+    /* FIXNÉ HUDOBNÉ POZADIE (SVG) */
     #bg-music{ position:fixed; inset:0; width:100vw; height:100vh; z-index:0; pointer-events:none; }
 
     /* Header */
@@ -55,7 +57,7 @@
     .hero p{ color:var(--muted); margin:0 0 18px; }
     .hero .actions{ display:flex; gap:12px; flex-wrap:wrap; }
 
-    /* Boxy */
+    /* Základ bloku (pred neónom) */
     .card, .hero-img, .service, .video-wrapper{
       background: var(--card);
       border: 1px solid rgba(255,255,255,.35);
@@ -77,11 +79,6 @@
     .video-wrapper{ overflow: visible; }
     .ratio{ position:relative; width:100%; padding-top:56.25%; }
     .ratio iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
-    .thumbs{ display:flex; gap:10px; margin-top:12px; overflow:auto; padding-bottom:2px; scroll-snap-type:x mandatory; }
-    .thumb{ flex:0 0 180px; border-radius:12px; overflow:hidden; border:2px solid transparent; cursor:pointer; background:#000; scroll-snap-align:start; outline:none; }
-    .thumb img{ display:block; width:100%; height:auto; }
-    .thumb.active{ border-color:var(--accent); }
-    .thumb .label{ padding:8px 10px; color:#fff; font-size:14px; background:rgba(0,0,0,.5); }
 
     /* Formulár */
     form{ display:grid; gap:12px; }
@@ -94,22 +91,52 @@
 
     footer{ padding:26px 0; color:#64748b; border-top:1px solid var(--border); }
 
-    /* MarSab floating badge + info okno */
+    /* =========================
+       NEÓNOVÝ PULZUJÚCI EFEKT
+       ========================= */
+    .neon{ isolation:isolate; }
+    .neon::before{
+      content:""; position:absolute; inset:-4px; border-radius:inherit; z-index:-1;
+      background: conic-gradient(from 0deg at 50% 50%, var(--neon-1), var(--neon-2), var(--neon-3), var(--neon-4), var(--neon-5), var(--neon-1));
+      filter: blur(22px) saturate(1.25); opacity:.70;
+      animation: neonSpin 9s linear infinite, neonPulse 3.5s ease-in-out infinite alternate;
+    }
+    .neon::after{
+      content:""; position:absolute; inset:0; border-radius:inherit; padding:2px;
+      background: linear-gradient(90deg, var(--neon-1), var(--neon-3), var(--neon-4), var(--neon-2));
+      /* mask pre kompatibilitu */
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      mask:         linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;  mask-composite: exclude;
+      opacity:.95; animation: neonHue 8s linear infinite; pointer-events:none;
+    }
+    @keyframes neonSpin { to { transform: rotate(360deg); } }
+    @keyframes neonPulse {
+      0% { transform: scale(0.98); opacity:.55; filter: blur(18px) saturate(1.05); }
+      100%{ transform: scale(1.02); opacity:.90; filter: blur(26px) saturate(1.35); }
+    }
+    @keyframes neonHue { 0%{ filter:hue-rotate(0deg); } 100%{ filter:hue-rotate(360deg); } }
+    .neon:hover::before{ opacity:.95; }
+    .neon:hover::after{ filter:brightness(1.1); }
+    @media (prefers-reduced-motion: reduce){ .neon::before, .neon::after{ animation:none; } }
+
+    /* Jemné pulzovanie notových čiar v pozadí */
+    #bg-music .staff{ animation: staffPulse 7.5s ease-in-out infinite; transform-origin:center; }
+    #bg-music .note{ animation: notePulse 9s ease-in-out infinite; }
+    @keyframes staffPulse{ 0%{opacity:.12;filter:drop-shadow(0 0 0 rgba(192,132,252,0))} 50%{opacity:.28;filter:drop-shadow(0 0 8px rgba(96,165,250,.55))} 100%{opacity:.18;filter:drop-shadow(0 0 0 rgba(192,132,252,0))} }
+    @keyframes notePulse{ 0%{opacity:.20} 50%{opacity:.35} 100%{opacity:.24} }
+    @media (prefers-reduced-motion: reduce){ #bg-music .staff,#bg-music .note{ animation:none; } }
+
+    /* MarSab badge + info */
     .brand-badge{
-      position:fixed; bottom:14px; right:14px;
-      display:flex; align-items:center; gap:6px; padding:6px 10px;
-      background:#000; color:#fff; font-size:12px; font-weight:700;
-      border-radius:12px; text-decoration:none; z-index:50; outline:none;
+      position:fixed; bottom:14px; right:14px; display:flex; align-items:center; gap:6px; padding:6px 10px;
+      background:#000; color:#fff; font-size:12px; font-weight:700; border-radius:12px; text-decoration:none; z-index:50; outline:none;
       box-shadow:0 0 10px rgba(0,0,0,.35);
     }
     .brand-badge img{ height:18px; width:auto; }
     .brand-badge:hover, .brand-badge:focus-visible{ background:#000; }
-    @media (max-width:600px){
-      .brand-badge{ font-size:11px; padding:5px 8px; bottom:10px; right:10px; }
-      .brand-badge img{ height:16px; }
-    }
+    @media (max-width:600px){ .brand-badge{ font-size:11px; padding:5px 8px; bottom:10px; right:10px; } .brand-badge img{ height:16px; } }
 
-    /* malé informačné okno */
     .ms-info{
       position:fixed; right:14px; bottom:54px; width:280px;
       background:#0b0b0b; color:#e5e7eb; border:1px solid #2b2b2b;
@@ -121,10 +148,7 @@
     .ms-info.show{ transform: translateY(0); opacity:1; pointer-events:auto; }
     .ms-info h4{ margin:0 0 6px; font-size:14px; color:#fff; }
     .ms-info p{ margin:0; font-size:12px; line-height:1.5; color:#cbd5e1; }
-    .ms-info .close{
-      position:absolute; top:6px; right:8px; background:transparent; border:0; color:#94a3b8;
-      font-size:18px; cursor:pointer; padding:2px; line-height:1;
-    }
+    .ms-info .close{ position:absolute; top:6px; right:8px; background:transparent; border:0; color:#94a3b8; font-size:18px; cursor:pointer; padding:2px; line-height:1; }
     .ms-info .close:hover, .ms-info .close:focus-visible{ color:#e2e8f0; }
   </style>
 </head>
@@ -134,16 +158,8 @@
   <!-- FIXNÉ HUDOBNÉ POZADIE (SVG) -->
   <svg id="bg-music" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
     <defs>
-      <filter id="grain">
-        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch"/>
-        <feColorMatrix type="saturate" values="0"/>
-        <feComponentTransfer><feFuncA type="linear" slope="0.06"/></feComponentTransfer>
-      </filter>
-      <style>
-        .staff{stroke:#1f2937;stroke-width:2;fill:none;opacity:.18}
-        .note{fill:#111827;opacity:.24}
-        .clef{fill:#111827;opacity:.18;font-size:220px}
-      </style>
+      <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope="0.06"/></feComponentTransfer></filter>
+      <style>.staff{stroke:#1f2937;stroke-width:2;fill:none;opacity:.18}.note{fill:#111827;opacity:.24}.clef{fill:#111827;opacity:.18;font-size:220px}</style>
     </defs>
     <rect x="-5" y="-5" width="1210" height="810" fill="transparent" filter="url(#grain)"></rect>
     <g transform="translate(0,140)">
@@ -225,26 +241,16 @@
     <!-- Galéria -->
     <section id="galeria" aria-labelledby="galeria-heading">
       <h2 id="galeria-heading">Galéria</h2>
-      <p class="lead">Ukážky piesní. Vyber video v podávači nižšie.</p>
+      <p class="lead">Ukážky tvorby — všetky videá z YouTube kanála.</p>
       <div class="video-wrapper neon">
         <div class="ratio">
           <iframe id="yt-player"
-            src="https://www.youtube.com/embed/VIDEO_ID_1?rel=0"
-            title="YouTube video player"
+            src="https://www.youtube-nocookie.com/embed/videoseries?list=UUY5aipf2tdexhQ-5eMiT38Q&rel=0"
+            title="Tvorba Ivany Birošovej — playlist"
             allowfullscreen
             loading="lazy"
             referrerpolicy="strict-origin-when-cross-origin"></iframe>
         </div>
-      </div>
-      <div class="thumbs" id="yt-thumbs" aria-label="Podávač videí">
-        <button class="thumb active" data-id="VIDEO_ID_1" aria-pressed="true">
-          <img src="https://img.youtube.com/vi/VIDEO_ID_1/hqdefault.jpg" alt="Ukážka 1 — náhľad" loading="lazy">
-          <div class="label">Ukážka 1</div>
-        </button>
-        <button class="thumb" data-id="VIDEO_ID_2" aria-pressed="false">
-          <img src="https://img.youtube.com/vi/VIDEO_ID_2/hqdefault.jpg" alt="Ukážka 2 — náhľad" loading="lazy">
-          <div class="label">Ukážka 2</div>
-        </button>
       </div>
     </section>
 
@@ -296,25 +302,10 @@
     // Rok vo footeri
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // YouTube podávač
-    const player = document.getElementById('yt-player');
-    const thumbs = document.getElementById('yt-thumbs');
-    if (thumbs && player) {
-      thumbs.addEventListener('click', (e) => {
-        const item = e.target.closest('.thumb'); if (!item) return;
-        const id = item.getAttribute('data-id'); if (!id) return;
-        player.src = `https://www.youtube.com/embed/${id}?rel=0`;
-        thumbs.querySelectorAll('.thumb').forEach(t => {
-          t.classList.remove('active'); t.setAttribute('aria-pressed','false');
-        });
-        item.classList.add('active'); item.setAttribute('aria-pressed','true');
-      });
-    }
+    // (Žiadny thumbs podávač nepoužívame; playlist má vlastnú navigáciu)
 
-    // === SKUTOČNÉ ODOSIELANIE FORMULÁRA NA BACKEND ===
-    // Lokálny test: tvoj Node server beží na http://localhost:8080
+    // Odosielanie formulára na backend (lokálne)
     const CONTACT_API = "http://localhost:8080/api/contact";
-
     const form = document.getElementById('contact-form');
     const statusEl = document.getElementById('form-status');
 
