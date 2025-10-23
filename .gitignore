@@ -1,0 +1,8 @@
+# Nikdy neposielaj heslá a systémové súbory
+.env
+.vscode/
+.DS_Store
+Thumbs.db
+*.log
+node_modules/
+dist/

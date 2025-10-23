@@ -253,10 +253,16 @@
       <h2 id="kontakt-heading">Kontakt</h2>
       <p class="lead">Napíš správu – príde na e-mail.</p>
       <div class="card neon">
-        <form id="contact-form">
+        <form id="contact-form" novalidate>
           <input type="text" name="name" placeholder="Meno" required autocomplete="name" />
           <input type="email" name="email" placeholder="E-mail" required autocomplete="email" inputmode="email" />
           <textarea name="message" placeholder="Správa" required></textarea>
+
+          <!-- honeypot (nevyplňovať; chráni proti botom) -->
+          <div style="position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden;">
+            <label>Spoločnosť <input type="text" name="company" tabindex="-1" autocomplete="off"></label>
+          </div>
+
           <button type="submit">Odoslať</button>
           <p id="form-status" aria-live="polite" style="margin:8px 0 0; color:var(--muted);"></p>
         </form>
@@ -293,24 +299,56 @@
     // YouTube podávač
     const player = document.getElementById('yt-player');
     const thumbs = document.getElementById('yt-thumbs');
-    thumbs.addEventListener('click', (e)=>{
-      const item = e.target.closest('.thumb'); if(!item) return;
-      const id = item.getAttribute('data-id'); if(!id) return;
-      player.src = `https://www.youtube.com/embed/${id}?rel=0`;
-      thumbs.querySelectorAll('.thumb').forEach(t=>{
-        t.classList.remove('active'); t.setAttribute('aria-pressed','false');
+    if (thumbs && player) {
+      thumbs.addEventListener('click', (e) => {
+        const item = e.target.closest('.thumb'); if (!item) return;
+        const id = item.getAttribute('data-id'); if (!id) return;
+        player.src = `https://www.youtube.com/embed/${id}?rel=0`;
+        thumbs.querySelectorAll('.thumb').forEach(t => {
+          t.classList.remove('active'); t.setAttribute('aria-pressed','false');
+        });
+        item.classList.add('active'); item.setAttribute('aria-pressed','true');
       });
-      item.classList.add('active'); item.setAttribute('aria-pressed','true');
-    });
+    }
 
-    // Demo odosielanie formulára
+    // === SKUTOČNÉ ODOSIELANIE FORMULÁRA NA BACKEND ===
+    // Lokálny test: tvoj Node server beží na http://localhost:8080
+    const CONTACT_API = "http://localhost:8080/api/contact";
+
     const form = document.getElementById('contact-form');
     const statusEl = document.getElementById('form-status');
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      statusEl.textContent = 'Odosielam…';
-      setTimeout(() => { statusEl.textContent = 'Správa odoslaná (demo).'; form.reset(); }, 600);
-    });
+
+    if (form) {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        statusEl.textContent = 'Odosielam…';
+
+        const formData = new FormData(form);
+        const payload = Object.fromEntries(formData.entries());
+
+        if (!payload.name || !payload.email || !payload.message) {
+          statusEl.textContent = 'Vyplň prosím všetky polia.';
+          return;
+        }
+
+        try {
+          const res = await fetch(CONTACT_API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          const data = await res.json();
+          if (data?.ok) {
+            statusEl.textContent = 'Ďakujem, správa bola odoslaná.';
+            form.reset();
+          } else {
+            statusEl.textContent = 'Nepodarilo sa odoslať. Skús prosím neskôr.';
+          }
+        } catch (_err) {
+          statusEl.textContent = 'Chyba pripojenia. Skús prosím znova.';
+        }
+      });
+    }
 
     // MarSab info okno (toggle)
     const badge = document.getElementById('ms-badge');
@@ -320,18 +358,20 @@
     const toggleInfo = (show) => {
       const willShow = (typeof show === 'boolean') ? show : !info.classList.contains('show');
       info.classList.toggle('show', willShow);
-      badge.setAttribute('aria-expanded', String(willShow));
+      if (badge) badge.setAttribute('aria-expanded', String(willShow));
     };
 
-    badge.addEventListener('click', (e)=>{ e.preventDefault(); toggleInfo(); });
-    closeBtn.addEventListener('click', ()=> toggleInfo(false));
-    document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') toggleInfo(false); });
-    document.addEventListener('click', (e)=>{
-      if(!info.classList.contains('show')) return;
-      if(!info.contains(e.target) && e.target !== badge && !badge.contains(e.target)){
-        toggleInfo(false);
-      }
-    });
+    if (badge && info && closeBtn) {
+      badge.addEventListener('click', (e)=>{ e.preventDefault(); toggleInfo(); });
+      closeBtn.addEventListener('click', ()=> toggleInfo(false));
+      document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') toggleInfo(false); });
+      document.addEventListener('click', (e)=>{
+        if(!info.classList.contains('show')) return;
+        if(!info.contains(e.target) && e.target !== badge && !badge.contains(e.target)){
+          toggleInfo(false);
+        }
+      });
+    }
   </script>
 </body>
 </html>
