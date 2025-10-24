@@ -2,6 +2,7 @@
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
+const cookieParser = require('cookie-parser'); // ⬅️ cookies pre admin PIN
 const { v4: uuidv4 } = require('uuid');
 const fs = require('fs-extra');
 
@@ -9,8 +10,9 @@ const app = express();
 const PORT = process.env.PORT || 10000;
 
 // ====== Nastavenia ======
-app.use(cors());              // povol CORS (OK aj produkčne)
+app.use(cors());              // CORS (OK aj produkčne)
 app.use(express.json());      // JSON body parser
+app.use(cookieParser());      // ⬅️ čítanie/zápis cookies
 
 // Statický hosting CELÉHO koreňa projektu (index.html, admin.html, img/, atď.)
 app.use(express.static(path.join(__dirname)));
@@ -38,9 +40,48 @@ async function writeMessages(arr) {
   await fs.writeJson(DB_FILE, arr, { spaces: 2 });
 }
 
-// ====== API ======
+// ====== Admin pomocné ======
+const ADMIN_PIN = process.env.ADMIN_PIN || ''; // ⬅️ PIN z Renderu (Environment → ADMIN_PIN)
+const REQUIRE_ADMIN = Boolean(ADMIN_PIN);      // len keď je PIN zadaný
 
-// Uloženie správy z formulára
+function isAdmin(req) {
+  // jednoduchá kontrola cookie; httpOnly cookie nastavíme pri /api/admin/login
+  return req.cookies && req.cookies.admin === '1';
+}
+
+function requireAdmin(req, res, next) {
+  if (!REQUIRE_ADMIN) return next();         // keď nie je PIN v env, nepýtame prihlásenie
+  if (isAdmin(req)) return next();
+  return res.status(401).json({ ok: false, error: 'unauthorized' });
+}
+
+// ====== API: Admin login/logout ======
+app.post('/api/admin/login', (req, res) => {
+  const pin = String(req.body?.pin || '');
+  if (!REQUIRE_ADMIN) {
+    // keď nie je nastavený ADMIN_PIN, považuj za OK (nič nechránime)
+    return res.json({ ok: true, note: 'no_pin_set' });
+  }
+  if (pin === ADMIN_PIN) {
+    // nastavíme bezpečné httpOnly cookie
+    res.cookie('admin', '1', {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 1000 * 60 * 60 * 6, // 6 hodín
+      path: '/',
+    });
+    return res.json({ ok: true });
+  }
+  return res.status(401).json({ ok: false, error: 'bad_pin' });
+});
+
+app.post('/api/admin/logout', (req, res) => {
+  res.clearCookie('admin', { path: '/' });
+  return res.json({ ok: true });
+});
+
+// ====== API: Kontakt (uloženie správy) ======
 app.post('/api/contact', async (req, res) => {
   try {
     const { name, email, message } = req.body || {};
@@ -67,8 +108,8 @@ app.post('/api/contact', async (req, res) => {
   }
 });
 
-// Zoznam správ
-app.get('/api/messages', async (_req, res) => {
+// ====== API: Zoznam správ (chránené PIN-om, ak je nastavený) ======
+app.get('/api/messages', requireAdmin, async (_req, res) => {
   try {
     const messages = await readMessages();
     return res.json({ ok: true, messages });
@@ -78,8 +119,8 @@ app.get('/api/messages', async (_req, res) => {
   }
 });
 
-// Zmazanie správy podľa ID
-app.delete('/api/messages/:id', async (req, res) => {
+// ====== API: Zmazanie správy (chránené PIN-om, ak je nastavený) ======
+app.delete('/api/messages/:id', requireAdmin, async (req, res) => {
   try {
     const id = req.params.id;
     const messages = await readMessages();
