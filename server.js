@@ -1,170 +1,157 @@
 // server.js
-// .env načítaj len mimo produkcie
+// (1) Načítaj .env len mimo produkcie – na Renderi sa používa Env Vars
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
 
 const express = require("express");
-const cors = require("cors");
 const rateLimit = require("express-rate-limit");
 const nodemailer = require("nodemailer");
 const path = require("path");
-const net = require("net");
 
 const app = express();
 
-// Render beží za proxy → musí byť pred rate-limitom
+// (2) Render beží za reverse proxy -> povol X-Forwarded-*
 app.set("trust proxy", 1);
 
-// Parsovanie + rate-limit
+// Parsovanie JSON + jednoduchý rate limit
 app.use(express.json({ limit: "200kb" }));
 app.use(
   rateLimit({
-    windowMs: 60 * 1000,
-    max: 20,
-    standardHeaders: true,
+    windowMs: 60 * 1000, // 1 min
+    limit: 120, // 120 požiadaviek / min
+    standardHeaders: "draft-7",
     legacyHeaders: false,
   })
 );
 
-// CORS
-const allowed = (process.env.ALLOWED_ORIGINS || "")
-  .split(",")
-  .map((s) => s.trim())
-  .filter(Boolean);
+// ---- CORS (vývoj: povolíme aj file:// a localhost)
+const allowed =
+  (process.env.ALLOW_ORIGINS ||
+    process.env.ALLOWED_ORIGINS ||
+    "") // podporíme obe mená
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
 
-app.use(
-  cors({
-    origin: (origin, cb) => {
-      if (!origin) return cb(null, true); // povoliť file://
-      if (process.env.ALLOW_ALL_ORIGINS === "true") return cb(null, true);
-      if (allowed.includes(origin)) return cb(null, true);
-      return cb(new Error("Origin not allowed by CORS"), false);
+const allowAll = String(process.env.ALLOW_ALL_ORIGINS || "").toLowerCase() === "true";
+
+app.use((req, res, next) => {
+  const origin = req.headers.origin || "";
+  if (allowAll) {
+    res.setHeader("Access-Control-Allow-Origin", origin || "*");
+  } else if (
+    origin &&
+    (allowed.includes(origin) ||
+      origin.startsWith("http://localhost") ||
+      origin.startsWith("https://localhost") ||
+      origin === "capacitor://localhost")
+  ) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
+  res.setHeader("Vary", "Origin");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  if (req.method === "OPTIONS") return res.sendStatus(204);
+  next();
+});
+
+// ========= Nodemailer =========
+function makeTransport() {
+  return nodemailer.createTransport({
+    host: process.env.SMTP_HOST, // napr. smtp.websupport.sk
+    port: Number(process.env.SMTP_PORT || 587),
+    secure: String(process.env.SMTP_SECURE || "false").toLowerCase() === "true", // false pre 587/STARTTLS
+    auth: {
+      user: process.env.SMTP_USER, // MUSÍ byť celá adresa, napr. no-reply@listobook.sk
+      pass: process.env.SMTP_PASS,
     },
-  })
-);
-
-// Statické súbory
-app.use(express.static(__dirname));
-app.get("/", (_req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
-});
-
-// Nodemailer – Websupport STARTTLS (587)
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,              // smtp.websupport.sk
-  port: Number(process.env.SMTP_PORT || 587),
-  secure: String(process.env.SMTP_SECURE) === "true", // pri 587 = false
-  requireTLS: true,
-  auth: {
-    user: process.env.SMTP_USER,            // no-reply@listobook.sk
-    pass: process.env.SMTP_PASS,
-  },
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 15000,
-  tls: {
-    minVersion: "TLSv1.2",
-    servername: process.env.SMTP_HOST,      // SNI
-  },
-});
-
-// Diagnostika pri štarte (uvidíš v Render Logs)
-transporter.verify((err, ok) => {
-  if (err) console.error("SMTP VERIFY ERROR:", err && err.message);
-  else console.log("SMTP ready:", ok);
-});
-
-// Sanitácia
-const sanitize = (s) =>
-  (s || "").toString().trim().replace(/\r?\n/g, " ").slice(0, 1000);
-
-function sendMailWithTimeout(mail, ms = 15000) {
-  return Promise.race([
-    transporter.sendMail(mail),
-    new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("MAIL TIMEOUT")), ms)
-    ),
-  ]);
+    requireTLS: true, // Websupport podporuje STARTTLS
+    tls: { minVersion: "TLSv1.2" },
+    pool: true,
+  });
 }
+const mailer = makeTransport();
 
-// API: /api/contact
-app.post("/api/contact", (req, res) => {
+// ========= API =========
+
+// test mail: GET /api/test-mail?to=volitelne
+app.get("/api/test-mail", async (req, res) => {
+  try {
+    const to = (req.query.to || process.env.MAIL_TO || "").toString();
+    if (!to) return res.status(400).json({ ok: false, error: "No recipient" });
+
+    const info = await mailer.sendMail({
+      from: process.env.MAIL_FROM || process.env.SMTP_USER,
+      to,
+      subject: "Test — Ivana Birošová web",
+      text: "Fungujem. 🙂",
+      html: "<p>Fungujem. 🙂</p>",
+    });
+
+    res.json({ ok: true, id: info.messageId });
+  } catch (err) {
+    console.error("TEST MAIL ERROR", err);
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
+// kontakt: POST /api/contact
+app.post("/api/contact", async (req, res) => {
   try {
     const { name, email, message, company } = req.body || {};
 
     // honeypot
-    if (company) return res.status(200).json({ ok: true });
+    if (company) return res.json({ ok: true });
 
     if (!name || !email || !message) {
-      return res.status(400).json({ ok: false, error: "Chýbajú údaje." });
+      return res.status(400).json({ ok: false, error: "Missing fields" });
     }
 
-    const fromName = sanitize(name);
-    const fromEmail = sanitize(email);
-    const msg = sanitize(message);
-
-    const mail = {
-      from: `"Formulár – web" <${process.env.MAIL_FROM}>`,
+    const info = await mailer.sendMail({
+      from: process.env.MAIL_FROM || process.env.SMTP_USER,
       to: process.env.MAIL_TO,
-      subject: `Nová správa z webu – ${fromName}`,
-      replyTo: fromEmail,
-      text: `Meno: ${fromName}\nE-mail: ${fromEmail}\n\nSpráva:\n${msg}`,
-      html: `<p><b>Meno:</b> ${fromName}<br/><b>E-mail:</b> ${fromEmail}</p>
-             <p><b>Správa:</b><br/>${msg
-               .replace(/</g, "&lt;")
-               .replace(/>/g, "&gt;")}</p>`,
-    };
+      subject: `Nová správa z webu — ${name}`,
+      replyTo: email,
+      text: `Meno: ${name}\nE-mail: ${email}\n\n${message}`,
+      html: `<p><b>Meno:</b> ${escapeHtml(name)}<br><b>E-mail:</b> ${escapeHtml(
+        email
+      )}</p><pre style="font:inherit; white-space:pre-wrap">${escapeHtml(message)}</pre>`,
+    });
 
-    // Okamžitá odpoveď – frontend nečaká na SMTP
-    res.status(202).json({ ok: true });
-
-    // Odoslanie na pozadí
-    sendMailWithTimeout(mail)
-      .then((info) => {
-        try { console.log("MAIL SENT:", info && info.messageId); } catch (_) {}
-      })
-      .catch((err) => {
-        console.error("MAIL ERROR (background):", err && err.message);
-      });
+    res.json({ ok: true, id: info.messageId });
   } catch (err) {
-    console.error("MAIL ERROR (handler):", err && err.message);
-    try {
-      res.status(500).json({ ok: false, error: "Nepodarilo sa odoslať e-mail." });
-    } catch (_) {}
+    console.error("MAIL ERROR", err);
+    res.status(500).json({ ok: false, error: err.message });
   }
 });
 
-// Healthcheck
-app.get("/api/health", (_req, res) => res.json({ ok: true }));
+// ========= Statické súbory =========
 
-// Dočasná diagnostika TCP konektivity na SMTP
-app.get("/api/smtp-check", (req, res) => {
-  const host = process.env.SMTP_HOST;
-  const port = Number(process.env.SMTP_PORT || 587);
-  const socket = new net.Socket();
-  const timeoutMs = 8000;
+// Servuj celý koreň projektu (index.html, m-*.html, /img, atď.)
+app.use(express.static(path.join(__dirname), { extensions: ["html"] }));
 
-  let finished = false;
-  const done = (ok, info) => {
-    if (finished) return;
-    finished = true;
-    try { socket.destroy(); } catch(_) {}
-    res.json({ ok, host, port, info });
-  };
-
-  socket.setTimeout(timeoutMs);
-  socket.once("connect", () => done(true, "TCP connect OK"));
-  socket.once("timeout", () => done(false, "TCP connect TIMEOUT"));
-  socket.once("error", (e) => done(false, `TCP connect ERROR: ${e.message}`));
-
-  try {
-    socket.connect(port, host);
-  } catch (e) {
-    done(false, `CONNECT THROW: ${e.message}`);
-  }
+// Fallback pre / (nech vždy vracia aktuálny index)
+app.get("/", (_req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
 });
 
-// PORT – Render si ho nastaví sám
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => console.log(`Server beží na porte ${PORT}`));
+// ========= Helper =========
+function escapeHtml(str = "") {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+// ========= Štart =========
+const PORT = Number(process.env.PORT || 10000);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log("/////////////////////////////////////////////////////");
+  console.log(`=> Server beží na porte ${PORT}`);
+  console.log("=> Your service is live 🎉");
+  console.log("/////////////////////////////////////////////////////");
+});
