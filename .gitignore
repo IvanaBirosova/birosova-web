@@ -6,3 +6,6 @@ Thumbs.db
 *.log
 node_modules/
 dist/
+
+# dáta aplikácie (správy z formulára)
+data/messages.json

@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="sk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Správy — Ivana Birošová</title>
+  <style>
+    :root{
+      --accent1:#a3e635;  /* zelená */
+      --accent2:#facc15;  /* žltá */
+      --text:#0f172a;
+      --muted:#475569;
+      --bg1:#f7fdf4;
+      --bg2:#fffbea;
+      --card:#ffffff;
+      --border:#e5e7eb;
+    }
+    *{box-sizing:border-box;}
+    body{
+      margin:0; padding:24px;
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+      background:linear-gradient(120deg,var(--bg1),var(--bg2));
+      background-size:300% 300%;
+      animation:bgShift 16s ease-in-out infinite alternate;
+    }
+    @keyframes bgShift{
+      0%{background-position:0% 50%}50%{background-position:50% 50%}100%{background-position:100% 50%}
+    }
+    h1{
+      font-size:clamp(24px,4vw,34px);
+      margin:0 0 20px;
+      text-align:center;
+    }
+    #list{
+      display:grid;
+      gap:18px;
+      max-width:900px;
+      margin:0 auto;
+    }
+    .msg{
+      position:relative;
+      background:var(--card);
+      border-radius:16px;
+      padding:18px 20px;
+      border:1px solid rgba(255,255,255,0.4);
+      box-shadow:0 8px 24px rgba(0,0,0,0.06);
+      overflow:hidden;
+    }
+    .msg::before{
+      content:"";position:absolute;inset:-3px;z-index:-1;border-radius:inherit;
+      background:conic-gradient(from 0deg,var(--accent1),var(--accent2),var(--accent1));
+      filter:blur(20px) saturate(1.2);opacity:.55;
+      animation:neonSpin 8s linear infinite;
+    }
+    @keyframes neonSpin{to{transform:rotate(360deg);}}
+    .meta{color:var(--muted);font-size:13px;margin-bottom:8px;}
+    .body{white-space:pre-wrap;line-height:1.5;}
+    .actions{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;}
+    button{
+      border:0;border-radius:10px;cursor:pointer;padding:8px 14px;font-weight:600;
+      font-family:inherit;font-size:14px;
+      transition:transform .15s ease,filter .15s ease;
+    }
+    button:hover{transform:scale(1.05);filter:brightness(1.05);}
+    .reply{background:var(--accent1);color:#000;}
+    .delete{background:#ef4444;color:#fff;}
+    .empty{color:var(--muted);text-align:center;font-style:italic;}
+    @media(max-width:600px){
+      body{padding:16px;}
+      .msg{padding:14px 16px;}
+      h1{font-size:22px;}
+    }
+  </style>
+</head>
+<body>
+  <h1>Prijaté správy</h1>
+  <div id="list">Načítavam...</div>
+
+  <script>
+    async function loadMessages(){
+      const el=document.getElementById('list');
+      el.textContent='Načítavam...';
+      try{
+        const res=await fetch('/api/messages');
+        const j=await res.json();
+        if(!j.ok){el.innerHTML='<p class="empty">Chyba: '+(j.error||'unknown')+'</p>';return;}
+        const arr=j.messages||[];
+        if(!arr.length){el.innerHTML='<p class="empty">Žiadne správy.</p>';return;}
+        el.innerHTML='';
+        arr.forEach(m=>{
+          const d=document.createElement('div');
+          d.className='msg';
+          d.innerHTML=`
+            <div class="meta"><strong>${escapeHtml(m.name)}</strong> — ${escapeHtml(m.email)} • ${new Date(m.ts).toLocaleString('sk-SK')}</div>
+            <div class="body">${escapeHtml(m.message)}</div>
+            <div class="actions">
+              <button class="reply" data-email="${escapeAttr(m.email)}" data-name="${escapeAttr(m.name)}" data-msg="${escapeAttr(m.message)}">Odpovedať</button>
+              <button class="delete" data-id="${m.id}">Zmazať</button>
+            </div>`;
+          el.appendChild(d);
+        });
+
+        document.querySelectorAll('.reply').forEach(b=>{
+          b.addEventListener('click',()=>{
+            const to=b.dataset.email;
+            const name=b.dataset.name;
+            const msg=b.dataset.msg;
+            const subject=encodeURIComponent('Odpoveď — '+name);
+            const body=encodeURIComponent('Ahoj '+name+',\n\n'+msg+'\n\n---\nIvana');
+            window.location.href=`mailto:${to}?subject=${subject}&body=${body}`;
+          });
+        });
+
+        document.querySelectorAll('.delete').forEach(b=>{
+          b.addEventListener('click',async()=>{
+            if(!confirm('Naozaj zmazať správu?'))return;
+            const id=b.dataset.id;
+            try{
+              const del=await fetch('/api/messages/'+encodeURIComponent(id),{method:'DELETE'});
+              const j=await del.json();
+              if(j.ok)loadMessages();else alert('Chyba: '+(j.error||'unknown'));
+            }catch(e){alert('Chyba pripojenia');}
+          });
+        });
+      }catch(e){
+        el.innerHTML='<p class="empty">Chyba načítania.</p>';
+      }
+    }
+
+    function escapeHtml(s){return (s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));}
+    function escapeAttr(s){return (s||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+
+    loadMessages();
+  </script>
+</body>
+</html>

@@ -15,7 +15,6 @@
     *{ box-sizing:border-box; }
     html,body{ margin:0; padding:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--text); line-height:1.6; }
 
-    /* jemne animované pastelové pozadie */
     body{
       background: linear-gradient(120deg,#f2f5f7 0%, #f0eefc 35%, #e8f7f0 70%, #fff0f3 100%);
       background-size: 300% 300%;
@@ -27,22 +26,18 @@
     a{ color:inherit; }
     .container{ max-width:1100px; margin:0 auto; padding:24px; }
 
-    /* Helpers pre desktop/mobile CTA prepínače */
     .only-desktop{ display:inline-flex; gap:12px; flex-wrap:wrap; }
     .only-mobile{ display:none; gap:12px; flex-wrap:wrap; }
 
-    /* Skip link */
     .skip-link{ position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden; }
     .skip-link:focus{ position:fixed; left:12px; top:12px; width:auto; height:auto; padding:10px 12px; background:#111827; color:#fff; z-index:100; border-radius:10px; }
 
-    /* FIXNÉ HUDOBNÉ POZADIE (SVG) */
     #bg-music{ position:fixed; inset:0; width:100vw; height:100vh; z-index:0; pointer-events:none; }
 
-    /* Header */
     header{ position:sticky; top:0; z-index:10; backdrop-filter:saturate(1.1) blur(6px); background:rgba(255,255,255,.55); border-bottom:1px solid var(--border); }
     .nav{ display:flex; align-items:center; justify-content:space-between; gap:16px; }
     .logo{ display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; }
-    .brand{ font-weight:800; letter-spacing:.2px; font-size:20px; }
+    .brand{ font-weight:800; letter-spacing:.2px; font-size:20px; cursor:pointer; } /* kvôli 5× klik */
     .tagline{ font-size:14px; color:var(--muted); font-weight:500; }
 
     .nav-links a{ text-decoration:none; color:var(--muted); padding:8px 10px; border-radius:10px; font-weight:600; outline:none; }
@@ -50,7 +45,6 @@
     .cta{ background:var(--accent); color:#fff !important; }
     .cta:hover, .cta:focus-visible{ filter:brightness(.95); }
 
-    /* hamburger + mobilné menu (skryté default) */
     .hamburger{
       display:none; font-size:24px; line-height:1; background:#111827; color:#fff;
       border:0; padding:8px 12px; border-radius:10px; cursor:pointer;
@@ -68,139 +62,106 @@
     }
     .mobile-menu a.cta{ margin:8px 16px; border-radius:12px; text-align:center; }
 
-    /* Obsah */
     main{ position:relative; z-index:5; }
-    .hero{ display:grid; grid-template-columns: 1.1fr .9fr; gap:28px; align-items:center; padding:32px 0 10px; }
-    .hero h1{ font-size:clamp(28px, 5vw, 44px); margin:0 0 12px; line-height:1.15; }
+    .hero{ display:grid; grid-template-columns:1.1fr .9fr; gap:28px; align-items:center; padding:32px 0 10px; }
+    .hero h1{ font-size:clamp(28px,5vw,44px); margin:0 0 12px; line-height:1.15; }
     .hero p{ color:var(--muted); margin:0 0 18px; }
 
-    /* Základ bloku (pred neónom) */
-    .card, .hero-img, .service, .video-wrapper{
-      background: var(--card);
-      border: 1px solid rgba(255,255,255,.35);
-      border-radius: 18px;
-      padding: 24px;
-      position: relative;
-      box-shadow: 0 8px 22px rgba(0,0,0,.06);
+    .card,.hero-img,.service,.video-wrapper{
+      background:var(--card); border:1px solid rgba(255,255,255,.35); border-radius:18px;
+      padding:24px; position:relative; box-shadow:0 8px 22px rgba(0,0,0,.06);
     }
     .hero-img{ padding:0; overflow:visible; }
     .hero-img img{ width:100%; height:100%; object-fit:cover; display:block; border-radius:18px; }
 
     section{ padding:40px 0; }
-    h2{ font-size:clamp(22px, 3.2vw, 32px); margin:0 0 12px; }
+    h2{ font-size:clamp(22px,3.2vw,32px); margin:0 0 12px; }
     .lead{ color:var(--muted); margin:0 0 20px; }
     .grid-3{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
     .service{ padding:18px; }
 
-    /* Galéria */
-    .video-wrapper{ overflow: visible; }
+    .video-wrapper{ overflow:visible; }
     .ratio{ position:relative; width:100%; padding-top:56.25%; }
     .ratio iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
 
-    /* Formulár */
     form{ display:grid; gap:12px; }
-    input, textarea, button{ font:inherit; }
-    input, textarea{ padding:12px 14px; border-radius:12px; border:1px solid #d1d5db; background:#fff; }
-    input:focus-visible, textarea:focus-visible{ outline:3px solid #bfdbfe; border-color:#93c5fd; }
+    input,textarea,button{ font:inherit; }
+    input,textarea{ padding:12px 14px; border-radius:12px; border:1px solid #d1d5db; background:#fff; }
+    input:focus-visible,textarea:focus-visible{ outline:3px solid #bfdbfe; border-color:#93c5fd; }
     textarea{ min-height:120px; resize:vertical; }
     button{ padding:12px 16px; border-radius:12px; border:0; background:var(--accent); color:#fff; font-weight:700; cursor:pointer; }
-    button:hover, button:focus-visible{ filter:brightness(.95); }
+    button:hover,button:focus-visible{ filter:brightness(.95); }
 
     footer{ padding:26px 0; color:#64748b; border-top:1px solid var(--border); }
 
-    /* =========================
-       NEÓNOVÝ PULZUJÚCI EFEKT
-       ========================= */
     .neon{ isolation:isolate; }
     .neon::before{
       content:""; position:absolute; inset:-4px; border-radius:inherit; z-index:-1;
-      background: conic-gradient(from 0deg at 50% 50%, var(--neon-1), var(--neon-2), var(--neon-3), var(--neon-4), var(--neon-5), var(--neon-1));
-      filter: blur(22px) saturate(1.25); opacity:.70;
-      animation: neonSpin 9s linear infinite, neonPulse 3.5s ease-in-out infinite alternate;
+      background:conic-gradient(from 0deg at 50% 50%, var(--neon-1), var(--neon-2), var(--neon-3), var(--neon-4), var(--neon-5), var(--neon-1));
+      filter:blur(22px) saturate(1.25); opacity:.70;
+      animation:neonSpin 9s linear infinite, neonPulse 3.5s ease-in-out infinite alternate;
     }
     .neon::after{
       content:""; position:absolute; inset:0; border-radius:inherit; padding:2px;
-      background: linear-gradient(90deg, var(--neon-1), var(--neon-3), var(--neon-4), var(--neon-2));
-      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-              mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-      -webkit-mask-composite: xor;  mask-composite: exclude;
-      opacity:.95; animation: neonHue 8s linear infinite; pointer-events:none;
+      background:linear-gradient(90deg, var(--neon-1), var(--neon-3), var(--neon-4), var(--neon-2));
+      -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+              mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite:xor; mask-composite:exclude;
+      opacity:.95; animation:neonHue 8s linear infinite; pointer-events:none;
     }
-    @keyframes neonSpin { to { transform: rotate(360deg); } }
-    @keyframes neonPulse {
-      0% { transform: scale(0.98); opacity:.55; filter: blur(18px) saturate(1.05); }
-      100%{ transform: scale(1.02); opacity:.90; filter: blur(26px) saturate(1.35); }
-    }
-    @keyframes neonHue { 0%{ filter:hue-rotate(0deg); } 100%{ filter:hue-rotate(360deg); } }
+    @keyframes neonSpin { to { transform:rotate(360deg); } }
+    @keyframes neonPulse { 0%{ transform:scale(.98); opacity:.55; filter:blur(18px) saturate(1.05) }
+                           100%{ transform:scale(1.02); opacity:.9; filter:blur(26px) saturate(1.35) } }
+    @keyframes neonHue { 0%{ filter:hue-rotate(0deg) } 100%{ filter:hue-rotate(360deg) } }
     .neon:hover::before{ opacity:.95; }
     .neon:hover::after{ filter:brightness(1.1); }
-    @media (prefers-reduced-motion: reduce){ .neon::before, .neon::after{ animation:none; } }
+    @media (prefers-reduced-motion: reduce){ .neon::before,.neon::after{ animation:none; } }
 
-    /* Jemné pulzovanie notových čiar v pozadí */
-    #bg-music .staff{ animation: staffPulse 7.5s ease-in-out infinite; transform-origin:center; }
-    #bg-music .note{ animation: notePulse 9s ease-in-out infinite; }
-    @keyframes staffPulse{ 0%{opacity:.12;filter:drop-shadow(0 0 0 rgba(192,132,252,0))} 50%{opacity:.28;filter:drop-shadow(0 0 8px rgba(96,165,250,.55))} 100%{opacity:.18;filter:drop-shadow(0 0 0 rgba(192,132,252,0))} }
-    @keyframes notePulse{ 0%{opacity:.20} 50%{opacity:.35} 100%{opacity:.24} }
+    #bg-music .staff{ animation:staffPulse 7.5s ease-in-out infinite; transform-origin:center; }
+    #bg-music .note{ animation:notePulse 9s ease-in-out infinite; }
+    @keyframes staffPulse{ 0%{opacity:.12} 50%{opacity:.28} 100%{opacity:.18} }
+    @keyframes notePulse { 0%{opacity:.20} 50%{opacity:.35} 100%{opacity:.24} }
     @media (prefers-reduced-motion: reduce){ #bg-music .staff,#bg-music .note{ animation:none; } }
 
-    /* MarSab badge + info */
-    .brand-badge{
-      position:fixed; bottom:14px; right:14px; display:flex; align-items:center; gap:6px; padding:6px 10px;
-      background:#000; color:#fff; font-size:12px; font-weight:700; border-radius:12px; text-decoration:none; z-index:50; outline:none;
-      box-shadow:0 0 10px rgba(0,0,0,.35);
-    }
+    .brand-badge{ position:fixed; bottom:14px; right:14px; display:flex; align-items:center; gap:6px; padding:6px 10px;
+      background:#000; color:#fff; font-size:12px; font-weight:700; border-radius:12px; text-decoration:none; z-index:50; outline:none; box-shadow:0 0 10px rgba(0,0,0,.35); }
     .brand-badge img{ height:18px; width:auto; }
-    .brand-badge:hover, .brand-badge:focus-visible{ background:#000; }
+    .brand-badge:hover,.brand-badge:focus-visible{ background:#000; }
     @media (max-width:600px){ .brand-badge{ font-size:11px; padding:5px 8px; bottom:10px; right:10px; } .brand-badge img{ height:16px; } }
 
-    .ms-info{
-      position:fixed; right:14px; bottom:54px; width:280px;
-      background:#0b0b0b; color:#e5e7eb; border:1px solid #2b2b2b;
-      border-radius:12px; padding:12px 12px 10px; z-index:60;
-      box-shadow:0 10px 28px rgba(0,0,0,.35);
-      transform: translateY(8px); opacity:0; pointer-events:none;
-      transition: opacity .18s ease, transform .18s ease;
-    }
-    .ms-info.show{ transform: translateY(0); opacity:1; pointer-events:auto; }
+    .ms-info{ position:fixed; right:14px; bottom:54px; width:280px; background:#0b0b0b; color:#e5e7eb; border:1px solid #2b2b2b;
+      border-radius:12px; padding:12px 12px 10px; z-index:60; box-shadow:0 10px 28px rgba(0,0,0,.35); transform:translateY(8px); opacity:0; pointer-events:none;
+      transition:opacity .18s ease, transform .18s ease; }
+    .ms-info.show{ transform:translateY(0); opacity:1; pointer-events:auto; }
     .ms-info h4{ margin:0 0 6px; font-size:14px; color:#fff; }
     .ms-info p{ margin:0; font-size:12px; line-height:1.5; color:#cbd5e1; }
     .ms-info .close{ position:absolute; top:6px; right:8px; background:transparent; border:0; color:#94a3b8; font-size:18px; cursor:pointer; padding:2px; line-height:1; }
-    .ms-info .close:hover, .ms-info .close:focus-visible{ color:#e2e8f0; }
+    .ms-info .close:hover,.ms-info .close:focus-visible{ color:#e2e8f0; }
 
-    /* ===== MOBILE LAYOUT (Domov minimalistický) ===== */
-    @media (max-width: 768px){
-      .nav { gap:10px; }
+    @media (max-width:768px){
+      .nav{ gap:10px; }
       .nav-links{ display:none; }
       .hamburger{ display:inline-block; }
-
       .container{ padding:18px; }
       section{ padding:20px 0; }
       h2{ font-size:22px; }
       .lead{ margin:0 0 14px; }
-
-      /* Domov má len hero (text + malá fotka) */
-      #o-mne, #sluzby, #galeria, #kontakt{ display:none; }
+      #o-mne,#sluzby,#galeria,#kontakt{ display:none; }
       .hero{ grid-template-columns:1fr; gap:14px; padding:18px 0 2px; }
       .hero-img{ display:block; width:82%; max-width:260px; margin:6px auto 0; padding:0; }
-      .card, .video-wrapper{ padding:16px; border-radius:16px; }
-      .neon::before{ filter: blur(16px); opacity:.55; }
+      .card,.video-wrapper{ padding:16px; border-radius:16px; }
+      .neon::before{ filter:blur(16px); opacity:.55; }
       .neon::after{ padding:1.5px; }
-
       .ratio{ padding-top:56.25%; }
       form{ gap:10px; }
-      input, textarea{ border-radius:10px; padding:12px; }
+      input,textarea{ border-radius:10px; padding:12px; }
       button{ border-radius:10px; padding:12px 14px; }
-
-      /* prepínače CTA */
       .only-desktop{ display:none; }
       .only-mobile{ display:flex; }
     }
-
-    @media (min-width: 769px) and (max-width: 1024px){
-      .hero{ grid-template-columns: 1fr .8fr; }
+    @media (min-width:769px) and (max-width:1024px){
+      .hero{ grid-template-columns:1fr .8fr; }
     }
-
-    /* CTA štýl pre odkazy */
     .btn{ text-decoration:none; padding:12px 16px; border-radius:12px; display:inline-block; font-weight:800; }
     .btn-outline{ border:1px solid #d1d5db; color:var(--text); }
   </style>
@@ -208,7 +169,7 @@
 <body>
   <a href="#main" class="skip-link">Preskočiť na obsah</a>
 
-  <!-- FIXNÉ HUDOBNÉ POZADIE (SVG) -->
+  <!-- hudobné pozadie -->
   <svg id="bg-music" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
     <defs>
       <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope="0.06"/></feComponentTransfer></filter>
@@ -237,15 +198,13 @@
     </g>
   </svg>
 
-  <!-- Header -->
   <header>
     <div class="container nav">
       <div class="logo">
-        <span class="brand">Ivana Birošová</span>
+        <span class="brand" id="brand">Ivana Birošová</span>
         <span class="tagline">skladateľka • textárka • tvorca hudobného obsahu</span>
       </div>
 
-      <!-- desktop navigácia -->
       <nav class="nav-links" aria-label="Primárna navigácia">
         <a href="#o-mne">O mne</a>
         <a href="#sluzby">Služby</a>
@@ -253,11 +212,9 @@
         <a href="#kontakt" class="cta">Kontakt</a>
       </nav>
 
-      <!-- hamburger na mobile -->
       <button id="menu-toggle" class="hamburger" aria-label="Menu" aria-controls="mobile-menu" aria-expanded="false">☰</button>
     </div>
 
-    <!-- mobilné menu (odkazuje na mobilné podstránky) -->
     <nav id="mobile-menu" class="mobile-menu" aria-label="Mobilná navigácia">
       <a href="m-o-mne.html">O mne</a>
       <a href="m-sluzby.html">Služby</a>
@@ -267,32 +224,27 @@
   </header>
 
   <main id="main" class="container">
-    <!-- Hero -->
     <section class="hero" aria-labelledby="hero-heading">
       <div class="card neon">
         <h1 id="hero-heading">Pesničky na mieru pre tvoje výročia, svadby a darčeky.</h1>
         <p>Tvoj príbeh premením na text a melódiu — nahrávka so spevom (AI) alebo inštrumentálna verzia podľa želania.</p>
 
-        <!-- CTA pre desktop (kotvy) -->
         <div class="actions only-desktop">
           <a class="btn cta" href="#kontakt">Napísať správu</a>
           <a class="btn btn-outline" href="#sluzby">Pozrieť služby</a>
         </div>
 
-        <!-- CTA pre mobil (m-stránky) -->
         <div class="actions only-mobile">
           <a class="btn cta" href="m-kontakt.html">Napísať správu</a>
           <a class="btn btn-outline" href="m-sluzby.html">Pozrieť služby</a>
         </div>
       </div>
 
-      <!-- malý obrázok na mobile, normálny na desktope -->
       <div class="hero-img neon">
         <img src="img/birosova.png" alt="Ilustrácia Ivany Birošovej so skladateľským motívom" />
       </div>
     </section>
 
-    <!-- O mne -->
     <section id="o-mne" aria-labelledby="o-mne-heading">
       <h2 id="o-mne-heading">O mne</h2>
       <p class="lead">Krátky príbeh, referencie, prístup k práci.</p>
@@ -303,7 +255,6 @@
       </div>
     </section>
 
-    <!-- Služby -->
     <section id="sluzby" aria-labelledby="sluzby-heading">
       <h2 id="sluzby-heading">Služby</h2>
       <p class="lead">Hudba na mieru – od nápadu po hotovú pesničku.</p>
@@ -314,7 +265,6 @@
       </div>
     </section>
 
-    <!-- Galéria -->
     <section id="galeria" aria-labelledby="galeria-heading">
       <h2 id="galeria-heading">Galéria</h2>
       <p class="lead">Ukážky tvorby — všetky videá z YouTube kanála.</p>
@@ -330,7 +280,6 @@
       </div>
     </section>
 
-    <!-- Kontakt -->
     <section id="kontakt" aria-labelledby="kontakt-heading">
       <h2 id="kontakt-heading">Kontakt</h2>
       <p class="lead">Napíš správu – príde na e-mail.</p>
@@ -356,13 +305,12 @@
     <div class="container">© <span id="year"></span> Ivana Birošová — skladateľka, textárka a tvorca hudobného obsahu</div>
   </footer>
 
-  <!-- MarSab floating badge -->
+  <!-- badge -->
   <a class="brand-badge" href="#" id="ms-badge" aria-controls="ms-info" aria-expanded="false" aria-label="MarSab®">
     <img src="img/marsab_logo.png" alt="MarSab® logo">
     <span>MarSab®</span>
   </a>
 
-  <!-- malé info okno (skryté) -->
   <div class="ms-info" id="ms-info">
     <button id="ms-close" class="close" aria-label="Zavrieť okno">×</button>
     <h4 id="ms-info-title">Tvorca stránky</h4>
@@ -375,10 +323,8 @@
   </div>
 
   <script>
-    // Rok vo footeri
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Hamburger toggle
     const btn = document.getElementById('menu-toggle');
     const mnav = document.getElementById('mobile-menu');
     if (btn && mnav) {
@@ -391,24 +337,22 @@
       mnav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => toggle(false)));
     }
 
-    // Odosielanie formulára
-    const CONTACT_API = "/api/contact";
-    const form = document.getElementById('contact-form');
-    const statusEl = document.getElementById('form-status');
+    // odoslanie formulára
+    (function(){
+      const CONTACT_API = "/api/contact";
+      const form = document.getElementById('contact-form');
+      const statusEl = document.getElementById('form-status');
 
-    if (form) {
+      if (!form) return;
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
         statusEl.textContent = 'Odosielam…';
-
-        const formData = new FormData(form);
-        const payload = Object.fromEntries(formData.entries());
+        const payload = Object.fromEntries(new FormData(form).entries());
 
         if (!payload.name || !payload.email || !payload.message) {
           statusEl.textContent = 'Vyplň prosím všetky polia.';
           return;
         }
-
         try {
           const res = await fetch(CONTACT_API, {
             method: 'POST',
@@ -416,40 +360,69 @@
             body: JSON.stringify(payload),
           });
           const data = await res.json();
-          if (data?.ok) {
-            statusEl.textContent = 'Ďakujem, správa bola odoslaná.';
-            form.reset();
-          } else {
-            statusEl.textContent = 'Nepodarilo sa odoslať. Skús prosím neskôr.';
+          if (data?.ok) { statusEl.textContent = 'Ďakujem, správa bola odoslaná.'; form.reset(); }
+          else { statusEl.textContent = 'Nepodarilo sa odoslať. Skús prosím neskôr.'; }
+        } catch { statusEl.textContent = 'Chyba pripojenia. Skús prosím znova.'; }
+      });
+    })();
+
+    // badge info okno
+    (function(){
+      const badge = document.getElementById('ms-badge');
+      const info  = document.getElementById('ms-info');
+      const closeBtn = document.getElementById('ms-close');
+
+      const toggleInfo = (show) => {
+        const willShow = (typeof show === 'boolean') ? show : !info.classList.contains('show');
+        info.classList.toggle('show', willShow);
+        if (badge) badge.setAttribute('aria-expanded', String(willShow));
+      };
+      if (badge && info && closeBtn) {
+        badge.addEventListener('click', (e)=>{ e.preventDefault(); toggleInfo(); });
+        closeBtn.addEventListener('click', ()=> toggleInfo(false));
+        document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') toggleInfo(false); });
+        document.addEventListener('click', (e)=>{
+          if(!info.classList.contains('show')) return;
+          if(!info.contains(e.target) && e.target !== badge && !badge.contains(e.target)){
+            toggleInfo(false);
           }
-        } catch (_err) {
-          statusEl.textContent = 'Chyba pripojenia. Skús prosím znova.';
-        }
-      });
-    }
+        });
+      }
+    })();
 
-    // MarSab info okno (toggle)
-    const badge = document.getElementById('ms-badge');
-    const info  = document.getElementById('ms-info');
-    const closeBtn = document.getElementById('ms-close');
+    // 5× klik na „Ivana Birošová“ -> PIN -> /unlock -> admin.html
+    (function(){
+      const target = document.getElementById('brand');
+      if (!target) return;
 
-    const toggleInfo = (show) => {
-      const willShow = (typeof show === 'boolean') ? show : !info.classList.contains('show');
-      info.classList.toggle('show', willShow);
-      if (badge) badge.setAttribute('aria-expanded', String(willShow));
-    };
+      let taps = 0, timer;
+      const WINDOW_MS = 1500;
 
-    if (badge && info && closeBtn) {
-      badge.addEventListener('click', (e)=>{ e.preventDefault(); toggleInfo(); });
-      closeBtn.addEventListener('click', ()=> toggleInfo(false));
-      document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') toggleInfo(false); });
-      document.addEventListener('click', (e)=>{
-        if(!info.classList.contains('show')) return;
-        if(!info.contains(e.target) && e.target !== badge && !badge.contains(e.target)){
-          toggleInfo(false);
-        }
-      });
-    }
+      async function unlockAndOpen(){
+        const pin = prompt('Zadaj PIN');
+        if (!pin) return;
+        try {
+          const res = await fetch('/unlock', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ pin })
+          });
+          const data = await res.json();
+          if (data && data.ok) window.location.href = '/admin.html';
+          else alert('Nesprávny PIN.');
+        } catch { alert('Chyba pripojenia.'); }
+      }
+
+      function registerTap(){
+        taps++;
+        clearTimeout(timer);
+        timer = setTimeout(()=> taps = 0, WINDOW_MS);
+        if (taps >= 5) { taps = 0; unlockAndOpen(); }
+      }
+
+      target.addEventListener('click', registerTap);
+      target.addEventListener('touchstart', registerTap, { passive:true });
+    })();
   </script>
 </body>
 </html>
