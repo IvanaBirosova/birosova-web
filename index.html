@@ -27,6 +27,10 @@
     a{ color:inherit; }
     .container{ max-width:1100px; margin:0 auto; padding:24px; }
 
+    /* Helpers pre desktop/mobile prepínače */
+    .only-desktop{ display:inline-flex; gap:12px; flex-wrap:wrap; }
+    .only-mobile{ display:none; gap:12px; flex-wrap:wrap; }
+
     /* Skip link */
     .skip-link{ position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden; }
     .skip-link:focus{ position:fixed; left:12px; top:12px; width:auto; height:auto; padding:10px 12px; background:#111827; color:#fff; z-index:100; border-radius:10px; }
@@ -69,7 +73,6 @@
     .hero{ display:grid; grid-template-columns: 1.1fr .9fr; gap:28px; align-items:center; padding:32px 0 10px; }
     .hero h1{ font-size:clamp(28px, 5vw, 44px); margin:0 0 12px; line-height:1.15; }
     .hero p{ color:var(--muted); margin:0 0 18px; }
-    .hero .actions{ display:flex; gap:12px; flex-wrap:wrap; }
 
     /* Základ bloku (pred neónom) */
     .card, .hero-img, .service, .video-wrapper{
@@ -81,7 +84,7 @@
       box-shadow: 0 8px 22px rgba(0,0,0,.06);
     }
     .hero-img{ padding:0; overflow:visible; }
-    .hero-img img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .hero-img img{ width:100%; height:100%; object-fit:cover; display:block; border-radius:18px; }
 
     section{ padding:40px 0; }
     h2{ font-size:clamp(22px, 3.2vw, 32px); margin:0 0 12px; }
@@ -164,23 +167,22 @@
     .ms-info .close{ position:absolute; top:6px; right:8px; background:transparent; border:0; color:#94a3b8; font-size:18px; cursor:pointer; padding:2px; line-height:1; }
     .ms-info .close:hover, .ms-info .close:focus-visible{ color:#e2e8f0; }
 
-    /* ===== MOBILE LAYOUT FIX (všetko pod seba) ===== */
+    /* ===== MOBILE LAYOUT (Domov minimalistický) ===== */
     @media (max-width: 768px){
       .nav { gap:10px; }
       .nav-links{ display:none; }
       .hamburger{ display:inline-block; }
 
       .container{ padding:18px; }
-      section{ padding:24px 0; }
+      section{ padding:20px 0; }
       h2{ font-size:22px; }
       .lead{ margin:0 0 14px; }
 
-      .hero{ grid-template-columns: 1fr; gap:16px; padding:20px 0 6px; }
-      .hero-img{ display:none; } /* skry hero obrázok na mobile */
-
-      .grid-3{ grid-template-columns:1fr; gap:12px; }
-      .service{ padding:14px; }
-
+      /* Domov má len hero (text + malá fotka) */
+      #o-mne, #sluzby, #galeria, #kontakt{ display:none; }
+      .hero{ grid-template-columns:1fr; gap:14px; padding:18px 0 2px; }
+      .hero-img{ display:block; width:82%; max-width:260px; margin:6px auto 0; padding:0; }
+      .hero .actions{ gap:12px; }
       .card, .video-wrapper{ padding:16px; border-radius:16px; }
       .neon::before{ filter: blur(16px); opacity:.55; }
       .neon::after{ padding:1.5px; }
@@ -189,11 +191,19 @@
       form{ gap:10px; }
       input, textarea{ border-radius:10px; padding:12px; }
       button{ border-radius:10px; padding:12px 14px; }
+
+      /* prepínače CTA */
+      .only-desktop{ display:none; }
+      .only-mobile{ display:flex; }
     }
 
     @media (min-width: 769px) and (max-width: 1024px){
       .hero{ grid-template-columns: 1fr .8fr; }
     }
+
+    /* CTA štýl pre odkazy */
+    .btn{ text-decoration:none; padding:12px 16px; border-radius:12px; display:inline-block; font-weight:800; }
+    .btn-outline{ border:1px solid #d1d5db; color:var(--text); }
   </style>
 </head>
 <body>
@@ -248,7 +258,7 @@
       <button id="menu-toggle" class="hamburger" aria-label="Menu" aria-controls="mobile-menu" aria-expanded="false">☰</button>
     </div>
 
-    <!-- mobilné menu (teraz odkazuje na mobilné podstránky) -->
+    <!-- mobilné menu (odkazuje na mobilné podstránky) -->
     <nav id="mobile-menu" class="mobile-menu" aria-label="Mobilná navigácia">
       <a href="m-o-mne.html">O mne</a>
       <a href="m-sluzby.html">Služby</a>
@@ -263,11 +273,21 @@
       <div class="card neon">
         <h1 id="hero-heading">Pesničky na mieru pre tvoje výročia, svadby a darčeky.</h1>
         <p>Tvoj príbeh premením na text a melódiu — nahrávka so spevom (AI) alebo inštrumentálna verzia podľa želania.</p>
-        <div class="actions">
-          <a class="cta" href="#kontakt" style="text-decoration:none; padding:12px 16px; border-radius:12px;">Napísať správu</a>
-          <a href="#sluzby" style="text-decoration:none; padding:12px 16px; border:1px solid #d1d5db; border-radius:12px; color:var(--text);">Pozrieť služby</a>
+
+        <!-- CTA pre desktop (kotvy) -->
+        <div class="actions only-desktop">
+          <a class="btn cta" href="#kontakt">Napísať správu</a>
+          <a class="btn btn-outline" href="#sluzby">Pozrieť služby</a>
+        </div>
+
+        <!-- CTA pre mobil (m-stránky) -->
+        <div class="actions only-mobile">
+          <a class="btn cta" href="m-kontakt.html">Napísať správu</a>
+          <a class="btn btn-outline" href="m-sluzby.html">Pozrieť služby</a>
         </div>
       </div>
+
+      <!-- malý obrázok na mobile, normálny na desktope -->
       <div class="hero-img neon">
         <img src="img/birosova.png" alt="Ilustrácia Ivany Birošovej so skladateľským motívom" />
       </div>
@@ -372,7 +392,7 @@
       mnav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => toggle(false)));
     }
 
-    // Odosielanie formulára (Render / produkcia -> relatívna cesta)
+    // Odosielanie formulára
     const CONTACT_API = "/api/contact";
     const form = document.getElementById('contact-form');
     const statusEl = document.getElementById('form-status');

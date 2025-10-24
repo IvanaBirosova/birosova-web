@@ -1,30 +1,46 @@
 <!doctype html><html lang="sk"><head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Kontakt — Ivana Birošová (mobil)</title>
-<style>body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
-header{position:sticky;top:0;background:#111827;color:#fff;padding:12px 16px;display:flex;gap:10px;align-items:center}
-header a{color:#fff;text-decoration:none;font-weight:700}
-main{padding:18px} h1{font-size:22px;margin:0 0 12px}
-input,textarea,button{font:inherit;width:100%}
-input,textarea{padding:12px;border-radius:12px;border:1px solid #e5e7eb;margin-bottom:10px}
-button{padding:12px;border-radius:12px;border:0;background:#2563eb;color:#fff;font-weight:800}
-small{color:#64748b}
-nav.bottom{position:fixed;left:0;right:0;bottom:0;border-top:1px solid #e5e7eb;background:#fff;display:grid;grid-template-columns:repeat(4,1fr)}
-nav.bottom a{padding:12px 6px;text-align:center;text-decoration:none;color:#0f172a;font-weight:700}
-</style></head><body>
+<style>
+  :root{--accent:#2563eb;--text:#0f172a;--muted:#475569;--card:#fff;--border:#e5e7eb;--neon-1:#67e8f9;--neon-2:#60a5fa;--neon-3:#c084fc;--neon-4:#f472b6;--neon-5:#fca5a5;}
+  *{box-sizing:border-box} html,body{margin:0;padding:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;color:var(--text);line-height:1.6}
+  body{background:linear-gradient(120deg,#f2f5f7 0%, #f0eefc 35%, #e8f7f0 70%, #fff0f3 100%);background-size:300% 300%;animation:bgShift 20s ease-in-out infinite alternate}
+  @keyframes bgShift{0%{background-position:0% 50%}50%{background-position:50% 50%}100%{background-position:100% 50%}}
+  header{position:sticky;top:0;background:rgba(17,24,39,.92);color:#fff;padding:12px 16px;display:flex;gap:10px;align-items:center;z-index:10}
+  header a{color:#fff;text-decoration:none;font-weight:700}
+  main{padding:18px}
+  h1{font-size:24px;margin:0 0 12px}
+  form{display:grid;gap:10px}
+  input,textarea,button{font:inherit;width:100%}
+  input,textarea{padding:12px;border-radius:12px;border:1px solid #e5e7eb;background:#fff}
+  input:focus-visible,textarea:focus-visible{outline:3px solid #bfdbfe;border-color:#93c5fd}
+  textarea{min-height:120px;resize:vertical}
+  button{padding:12px;border-radius:12px;border:0;background:var(--accent);color:#fff;font-weight:800}
+  .wrap{background:var(--card);border:1px solid rgba(255,255,255,.35);border-radius:18px;padding:16px;position:relative;box-shadow:0 8px 22px rgba(0,0,0,.06)}
+  .neon{isolation:isolate}
+  .neon::before{content:"";position:absolute;inset:-4px;border-radius:inherit;z-index:-1;background:conic-gradient(from 0deg at 50% 50%,var(--neon-1),var(--neon-2),var(--neon-3),var(--neon-4),var(--neon-5),var(--neon-1));filter:blur(16px) saturate(1.2);opacity:.7;animation:neonSpin 9s linear infinite,neonPulse 3.5s ease-in-out infinite alternate}
+  .neon::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;background:linear-gradient(90deg,var(--neon-1),var(--neon-3),var(--neon-4),var(--neon-2));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.95;animation:neonHue 8s linear infinite;pointer-events:none}
+  nav.bottom{position:fixed;left:0;right:0;bottom:0;border-top:1px solid #e5e7eb;background:#fff;display:grid;grid-template-columns:repeat(4,1fr)}
+  nav.bottom a{padding:12px 6px;text-align:center;text-decoration:none;color:#0f172a;font-weight:700}
+  p.muted{color:#334155;margin:0 0 12px}
+</style>
+</head><body>
 <header><a href="index.html">← Domov</a><div>Kontakt</div></header>
 <main>
   <h1>Napíš správu</h1>
-  <form id="contact-form" novalidate>
-    <input type="text" name="name" placeholder="Meno" required>
-    <input type="email" name="email" placeholder="E-mail" required inputmode="email" autocomplete="email">
-    <textarea name="message" placeholder="Správa" required></textarea>
-    <div style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden">
-      <label>Spoločnosť <input type="text" name="company" tabindex="-1" autocomplete="off"></label>
-    </div>
-    <button type="submit">Odoslať</button>
-    <p id="form-status"><small></small></p>
-  </form>
+  <p class="muted">Odpoviem čo najskôr. Polia sú povinné.</p>
+  <div class="wrap neon">
+    <form id="contact-form" novalidate>
+      <input type="text" name="name" placeholder="Meno" required>
+      <input type="email" name="email" placeholder="E-mail" required inputmode="email" autocomplete="email">
+      <textarea name="message" placeholder="Správa" required></textarea>
+      <div style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden">
+        <label>Spoločnosť <input type="text" name="company" tabindex="-1" autocomplete="off"></label>
+      </div>
+      <button type="submit">Odoslať</button>
+      <p id="form-status"><small></small></p>
+    </form>
+  </div>
 </main>
 <nav class="bottom">
   <a href="m-o-mne.html">O mne</a><a href="m-sluzby.html">Služby</a>
