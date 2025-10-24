@@ -27,7 +27,7 @@
     a{ color:inherit; }
     .container{ max-width:1100px; margin:0 auto; padding:24px; }
 
-    /* Helpers pre desktop/mobile prepínače */
+    /* Helpers pre desktop/mobile CTA prepínače */
     .only-desktop{ display:inline-flex; gap:12px; flex-wrap:wrap; }
     .only-mobile{ display:none; gap:12px; flex-wrap:wrap; }
 
@@ -53,7 +53,7 @@
     /* hamburger + mobilné menu (skryté default) */
     .hamburger{
       display:none; font-size:24px; line-height:1; background:#111827; color:#fff;
-      border:0; padding:8px 12px; border-radius:10px;
+      border:0; padding:8px 12px; border-radius:10px; cursor:pointer;
     }
     .mobile-menu{
       display:none;
@@ -182,7 +182,6 @@
       #o-mne, #sluzby, #galeria, #kontakt{ display:none; }
       .hero{ grid-template-columns:1fr; gap:14px; padding:18px 0 2px; }
       .hero-img{ display:block; width:82%; max-width:260px; margin:6px auto 0; padding:0; }
-      .hero .actions{ gap:12px; }
       .card, .video-wrapper{ padding:16px; border-radius:16px; }
       .neon::before{ filter: blur(16px); opacity:.55; }
       .neon::after{ padding:1.5px; }
@@ -364,14 +363,14 @@
   </a>
 
   <!-- malé info okno (skryté) -->
-  <div class="ms-info" id="ms-info" role="dialog" aria-modal="false" aria-labelledby="ms-info-title">
-    <button class="close" type="button" aria-label="Zavrieť" id="ms-close">×</button>
+  <div class="ms-info" id="ms-info">
+    <button id="ms-close" class="close" aria-label="Zavrieť okno">×</button>
     <h4 id="ms-info-title">Tvorca stránky</h4>
     <p>
-      Mgr. Marcel Šabla — webdizajnér, tvorca stránky<br>
+      MarSab® — webdizajn, tvorba stránok<br>
       IČO: 53713745<br>
-      Vedený v registri Okresný úrad Senec<br>
-      Číslo živnostenského registra: 140-26419
+      Okresný úrad Senec, ŽR č. 140-26419<br>
+      mail: sabla.marcel@gmail.com
     </p>
   </div>
 
