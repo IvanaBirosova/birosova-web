@@ -1,0 +1,48 @@
+<!doctype html><html lang="sk"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Kontakt — Ivana Birošová (mobil)</title>
+<style>body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
+header{position:sticky;top:0;background:#111827;color:#fff;padding:12px 16px;display:flex;gap:10px;align-items:center}
+header a{color:#fff;text-decoration:none;font-weight:700}
+main{padding:18px} h1{font-size:22px;margin:0 0 12px}
+input,textarea,button{font:inherit;width:100%}
+input,textarea{padding:12px;border-radius:12px;border:1px solid #e5e7eb;margin-bottom:10px}
+button{padding:12px;border-radius:12px;border:0;background:#2563eb;color:#fff;font-weight:800}
+small{color:#64748b}
+nav.bottom{position:fixed;left:0;right:0;bottom:0;border-top:1px solid #e5e7eb;background:#fff;display:grid;grid-template-columns:repeat(4,1fr)}
+nav.bottom a{padding:12px 6px;text-align:center;text-decoration:none;color:#0f172a;font-weight:700}
+</style></head><body>
+<header><a href="index.html">← Domov</a><div>Kontakt</div></header>
+<main>
+  <h1>Napíš správu</h1>
+  <form id="contact-form" novalidate>
+    <input type="text" name="name" placeholder="Meno" required>
+    <input type="email" name="email" placeholder="E-mail" required inputmode="email" autocomplete="email">
+    <textarea name="message" placeholder="Správa" required></textarea>
+    <div style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden">
+      <label>Spoločnosť <input type="text" name="company" tabindex="-1" autocomplete="off"></label>
+    </div>
+    <button type="submit">Odoslať</button>
+    <p id="form-status"><small></small></p>
+  </form>
+</main>
+<nav class="bottom">
+  <a href="m-o-mne.html">O mne</a><a href="m-sluzby.html">Služby</a>
+  <a href="m-galeria.html">Galéria</a><a href="m-kontakt.html">Kontakt</a>
+</nav>
+<script>
+const CONTACT_API="/api/contact";
+const form=document.getElementById('contact-form');
+const statusEl=document.getElementById('form-status');
+form?.addEventListener('submit',async(e)=>{
+  e.preventDefault(); statusEl.textContent='Odosielam…';
+  const fd=new FormData(form), payload=Object.fromEntries(fd.entries());
+  if(!payload.name||!payload.email||!payload.message){statusEl.textContent='Vyplň prosím všetky polia.';return;}
+  try{
+    const r=await fetch(CONTACT_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    const d=await r.json(); statusEl.textContent=d?.ok?'Ďakujem, správa bola odoslaná.':'Nepodarilo sa odoslať. Skús neskôr.';
+    if(d?.ok) form.reset();
+  }catch{ statusEl.textContent='Chyba pripojenia. Skús znova.'; }
+});
+</script>
+</body></html>
