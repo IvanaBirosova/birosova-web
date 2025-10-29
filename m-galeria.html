@@ -1,5 +1,8 @@
-<!doctype html><html lang="sk"><head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Galéria — Ivana Birošová (mobil)</title>
 <style>
   :root{--accent:#2563eb;--text:#0f172a;--muted:#475569;--card:#fff;--border:#e5e7eb;--neon-1:#67e8f9;--neon-2:#60a5fa;--neon-3:#c084fc;--neon-4:#f472b6;--neon-5:#fca5a5;}
@@ -16,23 +19,51 @@
   .neon::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;background:linear-gradient(90deg,var(--neon-1),var(--neon-3),var(--neon-4),var(--neon-2));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.95;animation:neonHue 8s linear infinite;pointer-events:none}
   .ratio{position:relative;width:100%;padding-top:56.25%;border-radius:14px;overflow:hidden}
   .ratio iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+
+  /* TIP pod playlistom (mobil) */
+  .playlist-tip{
+    margin:10px 2px 0;
+    padding:12px 14px;
+    border-radius:14px;
+    border:1px solid var(--border);
+    background:#fff;
+    box-shadow:0 6px 16px rgba(0,0,0,.05);
+    font-weight:700;
+  }
+  .playlist-tip small{display:block;color:var(--muted);font-weight:500;margin-top:4px}
+
   nav.bottom{position:fixed;left:0;right:0;bottom:0;border-top:1px solid #e5e7eb;background:#fff;display:grid;grid-template-columns:repeat(4,1fr)}
   nav.bottom a{padding:12px 6px;text-align:center;text-decoration:none;color:#0f172a;font-weight:700}
+  body{padding-bottom:58px} /* miesto pre spodnú lištu */
 </style>
-</head><body>
+</head>
+<body>
 <header><a href="index.html">← Domov</a><div>Galéria</div></header>
+
 <main>
   <h1>Ukážky tvorby</h1>
+
   <div class="wrap neon">
     <div class="ratio">
-      <iframe src="https://www.youtube-nocookie.com/embed/videoseries?list=UUY5aipf2tdexhQ-5eMiT38Q&rel=0"
+      <iframe
+        src="https://www.youtube-nocookie.com/embed/videoseries?list=UUY5aipf2tdexhQ-5eMiT38Q&rel=0"
         title="Playlist Ivany Birošovej" loading="lazy" allowfullscreen
         referrerpolicy="strict-origin-when-cross-origin"></iframe>
     </div>
   </div>
+
+  <!-- TIP k playlistu (rovnaký text ako na desktope) -->
+  <div class="playlist-tip" role="note" aria-label="Tip k prehrávaču">
+    🎵 <strong>Tip:</strong> V prehrávači je viac piesní!
+    <small>Klikni na ikonu „☰“ (v pravom hornom rohu videa) a vyber si skladbu, ktorú chceš počuť. Novšie pesničky sú navrchu, staršie nižšie v zozname.</small>
+  </div>
 </main>
+
 <nav class="bottom">
-  <a href="m-o-mne.html">O mne</a><a href="m-sluzby.html">Služby</a>
-  <a href="m-galeria.html">Galéria</a><a href="m-kontakt.html">Kontakt</a>
+  <a href="m-o-mne.html">O mne</a>
+  <a href="m-sluzby.html">Služby</a>
+  <a href="m-galeria.html">Galéria</a>
+  <a href="m-kontakt.html">Kontakt</a>
 </nav>
-</body></html>
+</body>
+</html>
