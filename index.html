@@ -11,10 +11,8 @@
       --accent:#2563eb; --text:#0f172a; --muted:#475569; --card:#ffffff; --border:#e5e7eb;
       --neon-1:#67e8f9; --neon-2:#60a5fa; --neon-3:#c084fc; --neon-4:#f472b6; --neon-5:#fca5a5;
     }
-
     *{ box-sizing:border-box; }
     html,body{ margin:0; padding:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--text); line-height:1.6; }
-
     body{
       background: linear-gradient(120deg,#f2f5f7 0%, #f0eefc 35%, #e8f7f0 70%, #fff0f3 100%);
       background-size: 300% 300%;
@@ -22,81 +20,58 @@
     }
     @keyframes bgShift{ 0%{background-position:0% 50%} 50%{background-position:50% 50%} 100%{background-position:100% 50%} }
     @media (prefers-reduced-motion: reduce){ body{ animation:none; } }
-
     a{ color:inherit; }
     .container{ max-width:1100px; margin:0 auto; padding:24px; }
-
     .only-desktop{ display:inline-flex; gap:12px; flex-wrap:wrap; }
     .only-mobile{ display:none; gap:12px; flex-wrap:wrap; }
-
     .skip-link{ position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden; }
     .skip-link:focus{ position:fixed; left:12px; top:12px; width:auto; height:auto; padding:10px 12px; background:#111827; color:#fff; z-index:100; border-radius:10px; }
-
     #bg-music{ position:fixed; inset:0; width:100vw; height:100vh; z-index:0; pointer-events:none; }
-
     header{ position:sticky; top:0; z-index:10; backdrop-filter:saturate(1.1) blur(6px); background:rgba(255,255,255,.55); border-bottom:1px solid var(--border); }
     .nav{ display:flex; align-items:center; justify-content:space-between; gap:16px; }
     .logo{ display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; }
     .brand{ font-weight:800; letter-spacing:.2px; font-size:20px; cursor:pointer; } /* kvôli 5× klik */
     .tagline{ font-size:14px; color:var(--muted); font-weight:500; }
-
     .nav-links a{ text-decoration:none; color:var(--muted); padding:8px 10px; border-radius:10px; font-weight:600; outline:none; }
     .nav-links a:hover, .nav-links a:focus-visible{ color:var(--text); background:#eef2ff; }
     .cta{ background:var(--accent); color:#fff !important; }
     .cta:hover, .cta:focus-visible{ filter:brightness(.95); }
-
     .hamburger{
       display:none; font-size:24px; line-height:1; background:#111827; color:#fff;
       border:0; padding:8px 12px; border-radius:10px; cursor:pointer;
     }
     .mobile-menu{
-      display:none;
-      position:sticky; top:56px; z-index:9;
-      background:rgba(255,255,255,.95);
-      backdrop-filter:saturate(1.1) blur(6px);
-      border-bottom:1px solid var(--border);
+      display:none; position:sticky; top:56px; z-index:9; background:rgba(255,255,255,.95);
+      backdrop-filter:saturate(1.1) blur(6px); border-bottom:1px solid var(--border);
     }
     .mobile-menu a{
       display:block; padding:14px 24px; text-decoration:none; color:var(--text);
       border-top:1px solid var(--border); font-weight:600;
     }
     .mobile-menu a.cta{ margin:8px 16px; border-radius:12px; text-align:center; }
-
     main{ position:relative; z-index:5; }
     .hero{ display:grid; grid-template-columns:1.1fr .9fr; gap:28px; align-items:center; padding:32px 0 10px; }
     .hero h1{ font-size:clamp(28px,5vw,44px); margin:0 0 12px; line-height:1.15; }
     .hero p{ color:var(--muted); margin:0 0 18px; }
-
     .card,.hero-img,.service,.video-wrapper{
       background:var(--card); border:1px solid rgba(255,255,255,.35); border-radius:18px;
       padding:24px; position:relative; box-shadow:0 8px 22px rgba(0,0,0,.06);
     }
     .hero-img{ padding:0; overflow:visible; }
     .hero-img img{ width:100%; height:100%; object-fit:cover; display:block; border-radius:18px; }
-
     section{ padding:40px 0; }
     h2{ font-size:clamp(22px,3.2vw,32px); margin:0 0 12px; }
     .lead{ color:var(--muted); margin:0 0 20px; }
     .grid-3{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
     .service{ padding:18px; }
-
     .video-wrapper{ overflow:visible; }
     .ratio{ position:relative; width:100%; padding-top:56.25%; }
     .ratio iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
-
-    /* --- doplnené: vysvetľujúci tip pod playlistom --- */
     .playlist-tip{
-      margin-top:12px;
-      padding:14px 16px;
-      border-radius:14px;
-      border:1px solid var(--border);
-      background:#fff;
-      color:#0f172a;
-      box-shadow:0 6px 16px rgba(0,0,0,.05);
-      font-weight:600;
+      margin-top:12px; padding:14px 16px; border-radius:14px; border:1px solid var(--border);
+      background:#fff; color:#0f172a; box-shadow:0 6px 16px rgba(0,0,0,.05); font-weight:600;
     }
     .playlist-tip small{ display:block; color:var(--muted); font-weight:500; margin-top:4px; }
-
     form{ display:grid; gap:12px; }
     input,textarea,button{ font:inherit; }
     input,textarea{ padding:12px 14px; border-radius:12px; border:1px solid #d1d5db; background:#fff; }
@@ -104,9 +79,7 @@
     textarea{ min-height:120px; resize:vertical; }
     button{ padding:12px 16px; border-radius:12px; border:0; background:var(--accent); color:#fff; font-weight:700; cursor:pointer; }
     button:hover,button:focus-visible{ filter:brightness(.95); }
-
     footer{ padding:26px 0; color:#64748b; border-top:1px solid var(--border); }
-
     .neon{ isolation:isolate; }
     .neon::before{
       content:""; position:absolute; inset:-4px; border-radius:inherit; z-index:-1;
@@ -129,19 +102,16 @@
     .neon:hover::before{ opacity:.95; }
     .neon:hover::after{ filter:brightness(1.1); }
     @media (prefers-reduced-motion: reduce){ .neon::before,.neon::after{ animation:none; } }
-
     #bg-music .staff{ animation:staffPulse 7.5s ease-in-out infinite; transform-origin:center; }
     #bg-music .note{ animation:notePulse 9s ease-in-out infinite; }
     @keyframes staffPulse{ 0%{opacity:.12} 50%{opacity:.28} 100%{opacity:.18} }
     @keyframes notePulse { 0%{opacity:.20} 50%{opacity:.35} 100%{opacity:.24} }
     @media (prefers-reduced-motion: reduce){ #bg-music .staff,#bg-music .note{ animation:none; } }
-
     .brand-badge{ position:fixed; bottom:14px; right:14px; display:flex; align-items:center; gap:6px; padding:6px 10px;
       background:#000; color:#fff; font-size:12px; font-weight:700; border-radius:12px; text-decoration:none; z-index:50; outline:none; box-shadow:0 0 10px rgba(0,0,0,.35); }
     .brand-badge img{ height:18px; width:auto; }
     .brand-badge:hover,.brand-badge:focus-visible{ background:#000; }
     @media (max-width:600px){ .brand-badge{ font-size:11px; padding:5px 8px; bottom:10px; right:10px; } .brand-badge img{ height:16px; } }
-
     .ms-info{ position:fixed; right:14px; bottom:54px; width:280px; background:#0b0b0b; color:#e5e7eb; border:1px solid #2b2b2b;
       border-radius:12px; padding:12px 12px 10px; z-index:60; box-shadow:0 10px 28px rgba(0,0,0,.35); transform:translateY(8px); opacity:0; pointer-events:none;
       transition:opacity .18s ease, transform .18s ease; }
@@ -149,7 +119,6 @@
     .ms-info h4{ margin:0 0 6px; font-size:14px; color:#fff; }
     .ms-info p{ margin:0; font-size:12px; line-height:1.5; color:#cbd5e1; }
     .ms-info .close{ position:absolute; top:6px; right:8px; background:transparent; border:0; color:#94a3b8; font-size:18px; cursor:pointer; padding:2px; line-height:1; }
-
     @media (max-width:768px){
       .nav{ gap:10px; }
       .nav-links{ display:none; }
@@ -176,6 +145,41 @@
     }
     .btn{ text-decoration:none; padding:12px 16px; border-radius:12px; display:inline-block; font-weight:800; }
     .btn-outline{ border:1px solid #d1d5db; color:var(--text); }
+
+    /* ===== Cookies UI ===== */
+    .cc-banner{
+      position:fixed; inset:auto 0 0 0; z-index:9999; background:#0b1020; color:#e5e7eb; border-top:1px solid #1f2a44;
+      padding:14px 16px;
+      box-shadow:0 -10px 30px rgba(0,0,0,.25);
+    }
+    .cc-wrap{ max-width:1100px; margin:0 auto; display:flex; gap:14px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
+    .cc-text{ font-size:14px; line-height:1.5; }
+    .cc-actions{ display:flex; gap:8px; flex-wrap:wrap; }
+    .cc-btn{ border:0; border-radius:10px; padding:10px 14px; font-weight:800; cursor:pointer; }
+    .cc-accept{ background:#16a34a; color:#fff; }
+    .cc-deny{ background:#f1f5f9; color:#0f172a; }
+    .cc-settings{ background:#1e293b; color:#e5e7eb; }
+    .cc-link{ color:#93c5fd; text-decoration:underline; }
+    .cc-hidden{ display:none !important; }
+    .cc-modal{
+      position:fixed; inset:0; background:rgba(2,6,23,.6); z-index:10000; display:none; align-items:center; justify-content:center; padding:16px;
+    }
+    .cc-modal.show{ display:flex; }
+    .cc-card{
+      width:min(720px, 96vw); background:#0b1020; color:#e5e7eb; border:1px solid #1f2a44; border-radius:16px; padding:18px;
+      box-shadow:0 18px 60px rgba(0,0,0,.4);
+    }
+    .cc-card h3{ margin:0 0 8px; }
+    .cc-row{ display:flex; align-items:center; justify-content:space-between; border:1px solid #1f2a44; border-radius:12px; padding:12px; margin-top:10px; }
+    .cc-row label{ font-weight:700; }
+    .cc-note{ color:#94a3b8; font-size:13px; margin-top:4px; }
+    .cc-save{ margin-top:12px; width:100%; }
+    /* YouTube placeholder */
+    .yt-consent{
+      position:absolute; inset:0; display:flex; align-items:center; justify-content:center; padding:16px; text-align:center;
+      background:rgba(15,23,42,.85); color:#e2e8f0; border-radius:18px;
+    }
+    .yt-consent button{ margin-top:8px; }
   </style>
 </head>
 <body>
@@ -216,17 +220,14 @@
         <span class="brand" id="brand">Ivana Birošová</span>
         <span class="tagline">skladateľka • textárka • tvorca hudobného obsahu</span>
       </div>
-
       <nav class="nav-links" aria-label="Primárna navigácia">
         <a href="#o-mne">O mne</a>
         <a href="#sluzby">Služby</a>
         <a href="#galeria">Galéria</a>
         <a href="#kontakt" class="cta">Kontakt</a>
       </nav>
-
       <button id="menu-toggle" class="hamburger" aria-label="Menu" aria-controls="mobile-menu" aria-expanded="false">☰</button>
     </div>
-
     <nav id="mobile-menu" class="mobile-menu" aria-label="Mobilná navigácia">
       <a href="m-o-mne.html">O mne</a>
       <a href="m-sluzby.html">Služby</a>
@@ -240,18 +241,15 @@
       <div class="card neon">
         <h1 id="hero-heading">Pesničky na mieru pre tvoje výročia, svadby a darčeky.</h1>
         <p>Tvoj príbeh premením na text a melódiu — nahrávka so spevom (AI) alebo inštrumentálna verzia podľa želania.</p>
-
         <div class="actions only-desktop">
           <a class="btn cta" href="#kontakt">Napísať správu</a>
           <a class="btn btn-outline" href="#sluzby">Pozrieť služby</a>
         </div>
-
         <div class="actions only-mobile">
           <a class="btn cta" href="m-kontakt.html">Napísať správu</a>
           <a class="btn btn-outline" href="m-sluzby.html">Pozrieť služby</a>
         </div>
       </div>
-
       <div class="hero-img neon">
         <img src="img/birosova.png" alt="Ilustrácia Ivany Birošovej so skladateľským motívom" />
       </div>
@@ -282,16 +280,24 @@
       <p class="lead">Ukážky tvorby — všetky videá z YouTube kanála.</p>
       <div class="video-wrapper neon">
         <div class="ratio">
+          <!-- YouTube sa načíta až po súhlase s Marketing/Médiá -->
           <iframe id="yt-player"
-            src="https://www.youtube-nocookie.com/embed/videoseries?list=UUY5aipf2tdexhQ-5eMiT38Q&rel=0"
+            src="about:blank"
+            data-yt-src="https://www.youtube-nocookie.com/embed/videoseries?list=UUY5aipf2tdexhQ-5eMiT38Q&rel=0"
             title="Tvorba Ivany Birošovej — playlist"
             allowfullscreen
             loading="lazy"
             referrerpolicy="strict-origin-when-cross-origin"></iframe>
+
+          <div id="yt-consent-overlay" class="yt-consent" role="note" aria-label="Pre zobrazenie videa je potrebný súhlas">
+            <div>
+              <p>Na zobrazenie YouTube obsahu je potrebný súhlas s kategóriou <strong>Marketing/Médiá</strong>.</p>
+              <button type="button" class="cc-btn cc-accept" id="yt-enable">Povoliť video (YouTube)</button>
+              <p class="cc-note" style="margin-top:6px;">Súhlas si môžeš kedykoľvek zmeniť v nastaveniach cookies.</p>
+            </div>
+          </div>
         </div>
       </div>
-
-      <!-- TIP k playlistu -->
       <div class="playlist-tip" role="note" aria-label="Tip k prehrávaču">
         🎵 <strong>Tip:</strong> V prehrávači je viac piesní!
         <small>Klikni na ikonu „☰“ (v pravom hornom rohu videa) a vyber si skladbu, ktorú chceš počuť. Novšie pesničky sú navrchu, staršie nižšie v zozname.</small>
@@ -320,7 +326,7 @@
   </main>
 
   <footer>
-    <div class="container">© <span id="year"></span> Ivana Birošová — skladateľka, textárka a tvorca hudobného obsahu</div>
+    <div class="container">© <span id="year"></span> Ivana Birošová — skladateľka, textárka a tvorca hudobného obsahu · <a class="cc-link" href="#" id="open-cc">Nastavenia cookies</a></div>
   </footer>
 
   <!-- badge -->
@@ -328,7 +334,6 @@
     <img src="img/marsab_logo.png" alt="MarSab® logo">
     <span>MarSab®</span>
   </a>
-
   <div class="ms-info" id="ms-info">
     <button id="ms-close" class="close" aria-label="Zavrieť okno">×</button>
     <h4 id="ms-info-title">Tvorca stránky</h4>
@@ -340,41 +345,88 @@
     </p>
   </div>
 
+  <!-- ===== Cookies Banner + Modal (HTML) ===== -->
+  <div id="cc-banner" class="cc-banner cc-hidden" role="dialog" aria-live="polite" aria-label="Informácia o súboroch cookies">
+    <div class="cc-wrap">
+      <div class="cc-text">
+        Používame súbory cookies na zlepšenie funkčnosti a zobrazenie médií. Niektoré cookies sú nevyhnutné. Ďalšie (analytika, marketing/médiá) si môžeš zapnúť.
+        <a href="#" class="cc-link" id="cc-more">Viac informácií</a>
+      </div>
+      <div class="cc-actions">
+        <button type="button" class="cc-btn cc-deny" id="cc-reject">Odmietnuť</button>
+        <button type="button" class="cc-btn cc-settings" id="cc-settings">Nastavenia</button>
+        <button type="button" class="cc-btn cc-accept" id="cc-accept">Prijať všetko</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="cc-modal" class="cc-modal" aria-hidden="true" aria-label="Nastavenia cookies">
+    <div class="cc-card" role="document">
+      <h3>Nastavenia cookies</h3>
+      <p class="cc-note">Súhlas sa uloží na tomto zariadení. Nevyhnutné cookies používame vždy.</p>
+
+      <div class="cc-row">
+        <div>
+          <label>Nevyhnutné</label>
+          <div class="cc-note">Potrebné pre fungovanie stránky (napr. odoslanie formulára, bezpečnosť). Vždy aktívne.</div>
+        </div>
+        <div><input type="checkbox" checked disabled /></div>
+      </div>
+
+      <div class="cc-row">
+        <div>
+          <label for="cc-analytics">Analytika</label>
+          <div class="cc-note">Nám pomáha pochopiť návštevnosť (napr. Google Analytics bez reklám).</div>
+        </div>
+        <div><input id="cc-analytics" type="checkbox" /></div>
+      </div>
+
+      <div class="cc-row">
+        <div>
+          <label for="cc-marketing">Marketing/Médiá</label>
+          <div class="cc-note">Zobrazenie vložených médií tretích strán (YouTube), prípadne marketingové cookies.</div>
+        </div>
+        <div><input id="cc-marketing" type="checkbox" /></div>
+      </div>
+
+      <button type="button" class="cc-btn cc-accept cc-save" id="cc-save">Uložiť nastavenia</button>
+    </div>
+  </div>
+
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    const btn = document.getElementById('menu-toggle');
-    const mnav = document.getElementById('mobile-menu');
-    if (btn && mnav) {
-      const toggle = (open) => {
-        const willOpen = typeof open === 'boolean' ? open : mnav.style.display !== 'block';
-        mnav.style.display = willOpen ? 'block' : 'none';
-        btn.setAttribute('aria-expanded', String(willOpen));
-      };
-      btn.addEventListener('click', () => toggle());
-      mnav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => toggle(false)));
-    }
+    // mobilné menu
+    (function(){
+      const btn = document.getElementById('menu-toggle');
+      const mnav = document.getElementById('mobile-menu');
+      if (btn && mnav) {
+        const toggle = (open) => {
+          const willOpen = typeof open === 'boolean' ? open : mnav.style.display !== 'block';
+          mnav.style.display = willOpen ? 'block' : 'none';
+          btn.setAttribute('aria-expanded', String(willOpen));
+        };
+        btn.addEventListener('click', () => toggle());
+        mnav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => toggle(false)));
+      }
+    })();
 
     // odoslanie formulára
     (function(){
       const CONTACT_API = "/api/contact";
       const form = document.getElementById('contact-form');
       const statusEl = document.getElementById('form-status');
-
       if (!form) return;
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
         statusEl.textContent = 'Odosielam…';
         const payload = Object.fromEntries(new FormData(form).entries());
-
         if (!payload.name || !payload.email || !payload.message) {
-          statusEl.textContent = 'Vyplň prosím všetky polia.';
-          return;
+          statusEl.textContent = 'Vyplň prosím všetky polia.'; return;
         }
         try {
           const res = await fetch(CONTACT_API, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
           });
           const data = await res.json();
@@ -389,7 +441,6 @@
       const badge = document.getElementById('ms-badge');
       const info  = document.getElementById('ms-info');
       const closeBtn = document.getElementById('ms-close');
-
       const toggleInfo = (show) => {
         const willShow = (typeof show === 'boolean') ? show : !info.classList.contains('show');
         info.classList.toggle('show', willShow);
@@ -408,21 +459,18 @@
       }
     })();
 
-    // 5× klik na „Ivana Birošová“ -> PIN -> /unlock -> admin.html
+    // 5× klik -> PIN -> /unlock -> admin.html
     (function(){
       const target = document.getElementById('brand');
       if (!target) return;
-
       let taps = 0, timer;
       const WINDOW_MS = 1500;
-
       async function unlockAndOpen(){
         const pin = prompt('Zadaj PIN');
         if (!pin) return;
         try {
           const res = await fetch('/unlock', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ pin })
           });
           const data = await res.json();
@@ -430,16 +478,116 @@
           else alert('Nesprávny PIN.');
         } catch { alert('Chyba pripojenia.'); }
       }
-
       function registerTap(){
-        taps++;
-        clearTimeout(timer);
-        timer = setTimeout(()=> taps = 0, WINDOW_MS);
+        taps++; clearTimeout(timer); timer = setTimeout(()=> taps = 0, WINDOW_MS);
         if (taps >= 5) { taps = 0; unlockAndOpen(); }
       }
-
       target.addEventListener('click', registerTap);
       target.addEventListener('touchstart', registerTap, { passive:true });
+    })();
+
+    /* ===== Cookie Consent – jednoduchý správca ===== */
+    (function(){
+      const COOKIE_NAME = 'cookieconsent';
+      const COOKIE_DAYS = 180;
+
+      const $banner = document.getElementById('cc-banner');
+      const $modal  = document.getElementById('cc-modal');
+      const $openCc = document.getElementById('open-cc');
+      const $more   = document.getElementById('cc-more');
+      const $accept = document.getElementById('cc-accept');
+      const $reject = document.getElementById('cc-reject');
+      const $settings = document.getElementById('cc-settings');
+      const $save = document.getElementById('cc-save');
+      const $a = document.getElementById('cc-analytics');
+      const $m = document.getElementById('cc-marketing');
+
+      function setCookie(name, value, days){
+        const d = new Date(); d.setTime(d.getTime() + (days*24*60*60*1000));
+        document.cookie = name + "=" + encodeURIComponent(value) + ";expires=" + d.toUTCString() + ";path=/;SameSite=Lax";
+      }
+      function getCookie(name){
+        const match = document.cookie.match(new RegExp('(^| )'+name+'=([^;]+)')); return match ? decodeURIComponent(match[2]) : null;
+      }
+      function readConsent(){
+        const raw = getCookie(COOKIE_NAME);
+        try { return raw ? JSON.parse(raw) : null; } catch { return null; }
+      }
+      function saveConsent(obj){
+        setCookie(COOKIE_NAME, JSON.stringify(obj), COOKIE_DAYS);
+      }
+      function showBanner(show){ $banner.classList.toggle('cc-hidden', !show); }
+      function showModal(show){
+        $modal.classList.toggle('show', !!show);
+        $modal.setAttribute('aria-hidden', show ? 'false' : 'true');
+      }
+
+      function applyConsent(consent){
+        // YouTube: načítaj iframe až keď je marketing povolený
+        const ytFrame = document.getElementById('yt-player');
+        const ytOverlay = document.getElementById('yt-consent-overlay');
+        const ytSrc = ytFrame?.getAttribute('data-yt-src');
+        const allowYT = !!consent.marketing;
+        if (ytFrame && ytOverlay){
+          if (allowYT){
+            if (ytSrc && ytFrame.src !== ytSrc) ytFrame.src = ytSrc;
+            ytOverlay.style.display = 'none';
+          } else {
+            ytFrame.src = 'about:blank';
+            ytOverlay.style.display = 'flex';
+          }
+        }
+
+        // SEM pridáš analytiku/marketing skripty podmienečne:
+        // if (consent.analytics) { /* inicializuj Analytics (bez reklám) */ }
+        // if (consent.marketing) { /* inicializuj marketingové skripty / pixel */ }
+      }
+
+      // Inicializácia
+      const stored = readConsent();
+      if (!stored){
+        showBanner(true);
+      } else {
+        applyConsent(stored);
+      }
+
+      // Ovládanie banneru
+      $accept.addEventListener('click', () => {
+        const consent = { necessary: true, analytics: true, marketing: true, ts: Date.now() };
+        saveConsent(consent); showBanner(false); applyConsent(consent);
+      });
+      $reject.addEventListener('click', () => {
+        const consent = { necessary: true, analytics: false, marketing: false, ts: Date.now() };
+        saveConsent(consent); showBanner(false); applyConsent(consent);
+      });
+      $settings.addEventListener('click', () => { showModal(true); });
+      $save.addEventListener('click', () => {
+        const consent = { necessary: true, analytics: !!$a.checked, marketing: !!$m.checked, ts: Date.now() };
+        saveConsent(consent); showModal(false); showBanner(false); applyConsent(consent);
+      });
+
+      // Trvalý odkaz v pätičke
+      $openCc.addEventListener('click', (e)=>{ e.preventDefault();
+        const c = readConsent();
+        $a.checked = !!c?.analytics; $m.checked = !!c?.marketing;
+        showModal(true);
+      });
+
+      // Link „Viac informácií“ – môže viesť na podstránku Zásady cookies/ochrany súkromia
+      $more.addEventListener('click', (e)=>{ e.preventDefault(); alert('Tip: pridáme odkaz na „Zásady používania cookies“.'); });
+
+      // Tlačidlo v YouTube overlay
+      const ytEnable = document.getElementById('yt-enable');
+      ytEnable.addEventListener('click', () => {
+        const current = readConsent() || { necessary:true, analytics:false, marketing:false };
+        current.marketing = true; saveConsent(current); applyConsent(current); showBanner(false);
+      });
+
+      // ESC zavrie modal
+      document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') showModal(false); });
+      // Klik mimo karty zavrie modal
+      $modal.addEventListener('click', (e)=>{ if(e.target === $modal) showModal(false); });
+
     })();
   </script>
 </body>
