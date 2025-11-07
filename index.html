@@ -146,38 +146,60 @@
     .btn{ text-decoration:none; padding:12px 16px; border-radius:12px; display:inline-block; font-weight:800; }
     .btn-outline{ border:1px solid #d1d5db; color:var(--text); }
 
-    /* ===== Cookies UI ===== */
+    /* ===== Cookies UI (upravené do neón štýlu) ===== */
     .cc-banner{
-      position:fixed; inset:auto 0 0 0; z-index:9999; background:#0b1020; color:#e5e7eb; border-top:1px solid #1f2a44;
-      padding:14px 16px;
-      box-shadow:0 -10px 30px rgba(0,0,0,.25);
+      position:fixed; inset:auto 0 0 0; z-index:9999;
+      background: linear-gradient(90deg, rgba(244,114,182,.14), rgba(96,165,250,.14));
+      backdrop-filter: saturate(1.2) blur(10px);
+      color:#0f172a;
+      border-top:1px solid rgba(96,165,250,.45);
+      padding:16px 18px;
+      box-shadow:0 -14px 38px rgba(96,165,250,.25), 0 -8px 18px rgba(244,114,182,.18);
     }
     .cc-wrap{ max-width:1100px; margin:0 auto; display:flex; gap:14px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
-    .cc-text{ font-size:14px; line-height:1.5; }
+    .cc-text{ font-size:14px; line-height:1.55; }
     .cc-actions{ display:flex; gap:8px; flex-wrap:wrap; }
-    .cc-btn{ border:0; border-radius:10px; padding:10px 14px; font-weight:800; cursor:pointer; }
-    .cc-accept{ background:#16a34a; color:#fff; }
-    .cc-deny{ background:#f1f5f9; color:#0f172a; }
-    .cc-settings{ background:#1e293b; color:#e5e7eb; }
-    .cc-link{ color:#93c5fd; text-decoration:underline; }
+    .cc-btn{ border:0; border-radius:12px; padding:10px 14px; font-weight:800; cursor:pointer; transition:transform .08s ease, filter .15s ease; }
+    .cc-btn:active{ transform:translateY(1px); }
+    .cc-accept{
+      background: linear-gradient(90deg, var(--neon-4), var(--neon-2));
+      color:#fff; box-shadow:0 8px 18px rgba(96,165,250,.32);
+    }
+    .cc-accept:hover, .cc-accept:focus-visible{ filter:brightness(1.02); }
+    .cc-deny{
+      background:#ffffff; color:#0f172a; border:1px solid #e5e7eb;
+    }
+    .cc-settings{
+      background:rgba(255,255,255,.6); color:#0f172a; border:1px solid rgba(148,163,184,.35);
+    }
+    .cc-link{
+      color:var(--neon-3); text-decoration:underline; font-weight:700;
+    }
     .cc-hidden{ display:none !important; }
     .cc-modal{
-      position:fixed; inset:0; background:rgba(2,6,23,.6); z-index:10000; display:none; align-items:center; justify-content:center; padding:16px;
+      position:fixed; inset:0; background:rgba(2,6,23,.55); z-index:10000; display:none; align-items:center; justify-content:center; padding:16px;
     }
     .cc-modal.show{ display:flex; }
     .cc-card{
-      width:min(720px, 96vw); background:#0b1020; color:#e5e7eb; border:1px solid #1f2a44; border-radius:16px; padding:18px;
-      box-shadow:0 18px 60px rgba(0,0,0,.4);
+      width:min(720px, 96vw);
+      background: linear-gradient(115deg, rgba(15,23,42,.92), rgba(2,6,23,.92));
+      color:#e5e7eb; border:1px solid rgba(96,165,250,.35); border-radius:16px; padding:20px;
+      box-shadow:0 22px 64px rgba(96,165,250,.35), 0 10px 22px rgba(244,114,182,.18);
     }
-    .cc-card h3{ margin:0 0 8px; }
-    .cc-row{ display:flex; align-items:center; justify-content:space-between; border:1px solid #1f2a44; border-radius:12px; padding:12px; margin-top:10px; }
+    .cc-card h3{ margin:0 0 10px; }
+    .cc-row{
+      display:flex; align-items:center; justify-content:space-between;
+      border:1px solid rgba(96,165,250,.28); border-radius:12px; padding:12px; margin-top:10px;
+      background: rgba(255,255,255,.02);
+    }
     .cc-row label{ font-weight:700; }
     .cc-note{ color:#94a3b8; font-size:13px; margin-top:4px; }
     .cc-save{ margin-top:12px; width:100%; }
     /* YouTube placeholder */
     .yt-consent{
       position:absolute; inset:0; display:flex; align-items:center; justify-content:center; padding:16px; text-align:center;
-      background:rgba(15,23,42,.85); color:#e2e8f0; border-radius:18px;
+      background:linear-gradient(115deg, rgba(15,23,42,.85), rgba(2,6,23,.85));
+      color:#e2e8f0; border-radius:18px; border:1px dashed rgba(96,165,250,.35);
     }
     .yt-consent button{ margin-top:8px; }
   </style>
@@ -573,8 +595,16 @@
         showModal(true);
       });
 
-      // Link „Viac informácií“ – môže viesť na podstránku Zásady cookies/ochrany súkromia
-      $more.addEventListener('click', (e)=>{ e.preventDefault(); alert('Tip: pridáme odkaz na „Zásady používania cookies“.'); });
+      // „Viac informácií“ otvorí priamo nastavenia (bez TIP/alert)
+      $more.addEventListener('click', (e)=>{ 
+        e.preventDefault();
+        const c = readConsent();
+        $a.checked = !!c?.analytics; 
+        $m.checked = !!c?.marketing;
+        showModal(true);
+        const title = document.querySelector('#cc-modal .cc-card h3');
+        if (title) { title.setAttribute('tabindex','-1'); title.focus(); }
+      });
 
       // Tlačidlo v YouTube overlay
       const ytEnable = document.getElementById('yt-enable');
